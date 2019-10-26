@@ -1,1 +1,40 @@
+Fuzz Generator
 
+-----------------------------------------------------------------
+Copyright (c) 1989 Lars Fredriksen, Bryan So, Barton Miller
+All rights reserved
+    
+This software is furnished under the condition that it may not
+be provided or otherwise made available to, or used by, any
+other person.  No title to or ownership of the software is
+hereby transferred.
+  
+Any use of this software must include the above copyright notice.
+-----------------------------------------------------------------
+
+IF YOU HAVE NOT READ THE "README" FILE IN THE PARENT DIRECTORY, PLEASE
+DO THAT FIRST!
+
+		Instructions for how to compile Fuzz and Ptyjig:
+
+
+	Use make with the provided Makefile to generate the programs.
+
+The options you may give make are as follows:
+
+all:		This generates all the executables, ie. both fuzz and
+		ptyjig will be compiled.
+
+fuzz:		Compiles only the fuzz program. Use this option if you have 
+		modified the fuzz program, and only want the fuzz program to 
+		be recompiled.
+
+ptyjig:		Compiles only the ptyjig program. Use this option if you have 
+		modified the ptyjig program, and only want the ptyjig program 
+		to be recompiled.
+
+lint:		This will run lint on the source files and put the complaints 
+		it has in the file  LINTERRS
+
+
+clean:		This option will remove all old object files, and core file.
