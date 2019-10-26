@@ -4,6 +4,5 @@
 
 fuzz
 if [ $? -eq 139 ]; then
-    echo "It crashed!"
-    exit 1
+    echo "Seg Fault!"
 fi
