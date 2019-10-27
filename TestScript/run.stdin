@@ -1,3 +1,5 @@
+#! /bin/bash
+
 TESTS=( t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 )
 NOTES=notesNew
 
@@ -8,8 +10,11 @@ for test in ${TESTS[*]}
      do
        echo $1" <"$test">&" "/dev/null"
        #$1 <$test >& /dev/null
-       $1 <$test>& /dev/null
-       trap 'echo "time out" echo "infinite loop detected " $test >> $NOTES' 2
+       timeout 300 $1 <$test>& /dev/null
+       if [ $? -eq 124 ]; then
+          echo "time out"
+          echo "infinite loop detected " $test >> $NOTES
+       fi
        if [ $? -eq 139 ]; then
           echo "core dumped"
           echo "core dump detected " $test >> $NOTES
