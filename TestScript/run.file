@@ -8,9 +8,9 @@ echo Testing $* ... >> $NOTES
 for test in ${TESTS[*]}
     # onintr InfiniteLoop
      do
-       echo $1 $test">& /dev/null"
+       echo $* $test">& /dev/null"
        #$1 <$test >& /dev/null
-       timeout 300 $1 $test>& /dev/null
+       timeout 300 $* $test>& /dev/null
        if [ $? -eq 124 ]; then
           echo "time out"
           echo "infinite loop detected " $test >> $NOTES
