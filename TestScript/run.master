@@ -71,7 +71,8 @@ run.stdin uniq
 run.stdin units
 run.stdin vgrind -t
 run.stdin wc
-run.file awk
+run.file awk '{print}'
+run.file awk '/a/ {print}'
 run.file colcrt - 
 run.file comm t12
 run.file colrm 2 4 
