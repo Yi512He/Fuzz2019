@@ -1,0 +1,124 @@
+run.stdin as
+run.stdin alias
+run.stdin bc
+run.stdin bibtex
+run.stdin cat
+run.stdin cb
+run.stdin cd
+run.stdin /usr/lib/cmplrs/cc/cfe
+run.stdin checkeq
+run.stdin checknr
+run.stdin col
+run.stdin colcrt
+run.stdin colrm
+run.stdin curl
+run.stdin /lib/cpp
+run.stdin dbx
+run.stdin dc
+run.stdin neqn
+run.stdin deroff
+run.stdin diction
+run.stdin ditroff
+run.stdin dtbl
+run.stdin echo
+run.stdin eqn
+run.stdin expand
+run.stdin fmt
+run.stdin fold
+run.stdin ftp
+run.stdin find
+run.stdin finger
+run.stdin graph
+run.stdin grep a
+run.stdin grn
+run.stdin head
+run.stdin ideal
+run.stdin indent -st
+run.stdin latex
+run.stdin lex
+run.stdin lisp
+run.stdin m4
+run.stdin more
+run.stdin nroff
+run.stdin pic
+run.stdin plot
+run.stdin pr
+run.stdin prolog
+run.stdin psdit
+run.stdin ptx
+run.stdin refer
+run.stdin rev
+run.stdin sed s/a/b/g
+run.stdin sh
+run.stdin soelim
+run.stdin sort
+run.stdin spell
+run.stdin spline
+run.stdin sql
+run.stdin strings
+run.stdin style
+run.stdin sum
+run.stdin tail
+run.stdin tbl
+run.stdin tee /tmp/tee.tmp
+run.stdin telnet
+run.stdin tex
+run.stdin tr a b
+run.stdin troff -t
+run.stdin tsort
+run.stdin ul
+run.stdin uniq
+run.stdin units
+run.stdin vgrind -t
+run.stdin wc
+run.file awk
+run.file colcrt - 
+run.file comm t12
+run.file colrm 2 4 
+run.file cpp
+run.file diff t12
+run.file expand
+run.file fmt
+run.file fold
+run.file grep -c "ab" 
+run.file head
+run.file join t12
+run.file lex
+run.file look a
+run.file mail -s "subject" 15927119728@163.com < 
+run.file make -f
+run.file m4 
+run.file nm
+run.file nroff
+run.file pr
+run.file rev
+run.file sed 's/a/b/' 
+run.file sort
+run.file split
+run.file strings
+run.file strip
+run.file sum
+run.file tail
+run.file tbl
+run.file tsort
+run.file ul
+run.file uniq
+run.file wc
+run.file yacc
+run.cp - calendar calendar
+run.cp t.c cc
+run.cp t compress
+run.cp t.f f77
+run.cp t.c lint
+run.cp t.p pc
+run.cp t split -10
+run.cp t.c ctags
+run.cp tags ptags
+run.cp tags ctree
+run.stdin ex
+run.stdin ed
+run.stdin e
+run.stdin /bin/mail
+run.stdin /usr/ucb/Mail
+run.stdin csh
+run.stdin xargs test
