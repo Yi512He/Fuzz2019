@@ -23,7 +23,7 @@ start = start + 100
 
 # -p
 for i in range(start, start+100):
-	subprocess.call(["fuzz", "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.call(["fuzz", "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + 100
 
 # -0 + -l
