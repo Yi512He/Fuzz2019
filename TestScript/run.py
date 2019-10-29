@@ -37,6 +37,7 @@ def run_file(item, output, test_list, fnull, timeout):
 		else:
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
+		output.flush()
 
 def run_cp(item, output, test_list, fnull, timeout):
 	type = item.split(" ", 2)[0]
@@ -55,6 +56,7 @@ def run_cp(item, output, test_list, fnull, timeout):
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
 		subprocess.call(["rm", "%s" % file_tmp])
+		output.flush()
 	
 def run_stdin(item, output, test_list, fnull, timeout):
 	type = item.split(" ", 1)[0]
@@ -70,6 +72,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
 		else:
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
+		output.flush()
 
 def run_double(item, output, test_list, fnull, timeout):
 	type = item.split(" ", 1)[0]
@@ -87,6 +90,7 @@ def run_double(item, output, test_list, fnull, timeout):
 		else:
 			if retcode < 0:
 				output.write("%s %s %s %s error: %d\n" % (type, cmd, test_case1, test_case2, retcode))
+		output.flush()
 
 
 
