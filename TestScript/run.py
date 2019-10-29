@@ -4,9 +4,9 @@ import sys
 import random
 
 # can change
-test_path = "./"
+test_path = "./NewTest/"
 test_prefix = "t"
-test_num = 12
+test_num = 599
 timeout = 300
 output_filename = "python_log"
 
@@ -29,8 +29,11 @@ def run_file(item, output, test_list, fnull, timeout):
 	for test_case in test_list:
 		try:
 			retcode = subprocess.call(["%s" % cmd, "%s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-		except:
+		except(subprocess.TimeoutExpired):
 			output.write("%s %s %s hang\n" % (type, cmd, test_case))
+		except(FileNotFoundError):
+			output.write("%s %s not found\n" % (type, cmd))
+			break
 		else:
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
@@ -43,8 +46,11 @@ def run_cp(item, output, test_list, fnull, timeout):
 		try:
 			subprocess.call(["cp", "%s" % test_case, "%s" % file_tmp])
 			retcode = subprocess.call(["%s" % cmd, "%s" % file_tmp], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-		except:
+		except(subprocess.TimeoutExpired):
 			output.write("%s %s %s hang\n" % (type, cmd, test_case))
+		except(FileNotFoundError):
+			output.write("%s %s not found\n" % (type, cmd))
+			break
 		else:
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
@@ -56,8 +62,11 @@ def run_stdin(item, output, test_list, fnull, timeout):
 	for test_case in test_list:
 		try:
 			retcode = subprocess.call(["%s" % cmd, "< %s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-		except:
+		except(subprocess.TimeoutExpired):
 			output.write("%s %s %s hang\n" % (type, cmd, test_case))
+		except(FileNotFoundError):
+			output.write("%s %s not found\n" % (type, cmd))
+			break
 		else:
 			if retcode < 0:
 				output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
@@ -70,8 +79,11 @@ def run_double(item, output, test_list, fnull, timeout):
 		test_case2 = random.choice(test_list)
 		try:
 			retcode = subprocess.call(["%s" % cmd, "%s %s" % (test_case1, test_case2)], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
-		except:
+		except(subprocess.TimeoutExpired):
 			output.write("%s %s %s %s hang\n" % (type, cmd, test_case1, test_case2))
+		except(FileNotFoundError):
+			output.write("%s %s not found\n" % (type, cmd))
+			break
 		else:
 			if retcode < 0:
 				output.write("%s %s %s %s error: %d\n" % (type, cmd, test_case1, test_case2, retcode))
@@ -101,6 +113,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
 
 	all_utilities_file.close()
 	output_file.close()
+	fnull.close()
 
 
 
