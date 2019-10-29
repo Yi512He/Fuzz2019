@@ -3,37 +3,42 @@ import subprocess
 import random
 
 fnull = open(os.devnull, 'w')
+path = "./NewTest"
+
+if not os.path.exists(path):
+	os.mkdir(path)
 
 
 # -0
 for i in range(13, 100):
-	subprocess.run(["fuzz", "-0", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 
 start = 100
 
 
 # -a
 for i in range(start, start+100):
-	subprocess.run(["fuzz", "-a", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + 100
 
 # -p
 for i in range(start, start+100):
-	subprocess.run(["fuzz", "-a", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + 100
 
 # -0 + -l
 for i in range(start, start+100):
 	l = random.randint(1, 255)
-	subprocess.run(["fuzz", "-l %d" % l, "-0", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-l %d" % l, "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 start = start + 100
 
 # -a + -l
 for i in range(start, start+100):
 	l = random.randint(1, 255)
-	subprocess.run(["fuzz", "-l %d" % l, "-a", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-l %d" % l, "-a", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
+start = start + 100
 
 # -p + -l
 for i in range(start, start+100):
 	l = random.randint(1, 255)
-	subprocess.run(["fuzz", "-l %d" % l, "-p", "-o ./NewTest/t%d" % i], stdout=fnull, stderr=subprocess.STDOUT)
+	subprocess.run(["fuzz", "-l %d" % l, "-p", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
