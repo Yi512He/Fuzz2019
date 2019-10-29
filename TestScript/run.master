@@ -123,3 +123,6 @@ run.stdin /bin/mail
 run.stdin /usr/ucb/Mail
 run.stdin csh
 run.stdin xargs test
+run.double diff
+run.double join
+run.double comm
