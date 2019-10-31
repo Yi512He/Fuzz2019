@@ -126,54 +126,54 @@ if not os.path.exists(output_filename_dir):
 
 # open run.master and test every cmd
 with open(all_utilities_path, "r") as all_utilities_file:
-	utilities = all_utilities_file.readlines()
-	for item in utilities:
-		item = item.strip()
-		type = item.split(" ", 1)[0]
-		print(item)
+  utilities = all_utilities_file.readlines()
+  for item in utilities:
+    item = item.strip()
+    type = item.split(" ", 1)[0]
+    print(item)
 
-		if type == "run.stdin":
+    if type == "run.stdin":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
         continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
-			run_stdin(item, output_file, test_list, fnull, timeout)
+      run_stdin(item, output_file, test_list, fnull, timeout)
       output_file.close()
 
-		elif type == "run.file":
+    elif type == "run.file":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
         continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
-			run_file(item, output_file, test_list, fnull, timeout)
+      run_file(item, output_file, test_list, fnull, timeout)
       output_file.close()
 
-		elif type == "run.cp":
+    elif type == "run.cp":
       cmd = item.split(" ", 2)[2]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
         continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
-			run_cp(item, output_file, test_list, fnull, timeout)
+      run_cp(item, output_file, test_list, fnull, timeout)
       output_file.close()
 
-		elif type == "run.double":
+    elif type == "run.double":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
         continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
-			run_double(item, output_file, test_list, fnull, timeout)
+      run_double(item, output_file, test_list, fnull, timeout)
       output_file.close()
 
-	all_utilities_file.close()
-	fnull.close()
+  all_utilities_file.close()
+  fnull.close()
 
 
 
