@@ -137,7 +137,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name):
         with open(file_name, "r") as f:
-          if f.readlines()[-1] != "finished\n":
+          if f.readlines()[-1] == "finished\n":
             continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
@@ -150,7 +150,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name):
         with open(file_name, "r") as f:
-          if f.readlines()[-1] != "finished\n":
+          if f.readlines()[-1] == "finished\n":
             continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
@@ -163,7 +163,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name):
         with open(file_name, "r") as f:
-          if f.readlines()[-1] != "finished\n":
+          if f.readlines()[-1] == "finished\n":
             continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
@@ -176,7 +176,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
       if os.path.exists(file_name):
         with open(file_name, "r") as f:
-          if f.readlines()[-1] != "finished\n":
+          if f.readlines()[-1] == "finished\n":
             continue
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
