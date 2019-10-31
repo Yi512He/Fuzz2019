@@ -8,13 +8,14 @@ test_path = "./NewTest/"
 test_prefix = "t"
 test_num = 599
 timeout = 300
-output_filename = "python_log_flush"
+arg_error_detect = 3
+output_filename_dir = "./output_log"
 
 
 # can't change
 fnull = open(os.devnull, 'w')
-all_utilities_path = "./run.master"
-output_file = open(output_filename, "w")
+all_utilities_path = "./run.master_debug"
+# output_file = open(output_filename, "w")
 
 # test cases path
 test_list = []
@@ -28,7 +29,7 @@ def run_file(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 3:
+    if hang_count >= arg_error_detect:
       break
     try:
       retcode = subprocess.call(["%s" % cmd, "%s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
@@ -42,7 +43,7 @@ def run_file(item, output, test_list, fnull, timeout):
       hang_count = 0
       if retcode < 0:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
-    output.flush()
+    # output.flush()
 
 def run_cp(item, output, test_list, fnull, timeout):
   type = item.split(" ", 2)[0]
@@ -50,7 +51,7 @@ def run_cp(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 2)[2]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 3:
+    if hang_count >= arg_error_detect:
       break
     try:
       subprocess.call(["cp", "%s" % test_case, "%s" % file_tmp])
@@ -66,14 +67,14 @@ def run_cp(item, output, test_list, fnull, timeout):
       if retcode < 0:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
         subprocess.call(["rm", "%s" % file_tmp])
-    output.flush()
+    # output.flush()
 	
 def run_stdin(item, output, test_list, fnull, timeout):
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 3:
+    if hang_count >= arg_error_detect:
       break
     try:
       retcode = subprocess.call(["%s" % cmd, "< %s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
@@ -87,14 +88,14 @@ def run_stdin(item, output, test_list, fnull, timeout):
       hang_count = 0
       if retcode < 0:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
-    output.flush()
+    # output.flush()
 
 def run_double(item, output, test_list, fnull, timeout):
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for i in range(len(test_list)):
-    if hang_count >= 3:
+    if hang_count >= arg_error_detect:
       break
     test_case1 = random.choice(test_list)
     test_case2 = random.choice(test_list)
@@ -110,36 +111,68 @@ def run_double(item, output, test_list, fnull, timeout):
       hang_count = 0
       if retcode < 0:
         output.write("%s %s %s %s error: %d\n" % (type, cmd, test_case1, test_case2, retcode))
-    output.flush()
+    # output.flush()
 
 
 
 
 
+
+
+# start
+# create dir for log
+if not os.path.exists(output_filename_dir):
+  os.mkdir(output_filename_dir)
+
+# open run.master and test every cmd
 with open(all_utilities_path, "r") as all_utilities_file:
 	utilities = all_utilities_file.readlines()
 	for item in utilities:
 		item = item.strip()
 		type = item.split(" ", 1)[0]
-		output_file.write("start: %s\n" % item)
-		output_file.flush()
 		print(item)
 
 		if type == "run.stdin":
+      cmd = item.split(" ", 1)[1]
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        continue
+      output_file = open(file_name, "w")
+      output_file.write("start: %s\n" % item)
 			run_stdin(item, output_file, test_list, fnull, timeout)
+      output_file.close()
 
 		elif type == "run.file":
+      cmd = item.split(" ", 1)[1]
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        continue
+      output_file = open(file_name, "w")
+      output_file.write("start: %s\n" % item)
 			run_file(item, output_file, test_list, fnull, timeout)
+      output_file.close()
 
 		elif type == "run.cp":
+      cmd = item.split(" ", 2)[2]
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        continue
+      output_file = open(file_name, "w")
+      output_file.write("start: %s\n" % item)
 			run_cp(item, output_file, test_list, fnull, timeout)
+      output_file.close()
 
 		elif type == "run.double":
+      cmd = item.split(" ", 1)[1]
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      if os.path.exists(file_name) and os.path.getsize(file_name) > 0:
+        continue
+      output_file = open(file_name, "w")
+      output_file.write("start: %s\n" % item)
 			run_double(item, output_file, test_list, fnull, timeout)
+      output_file.close()
 
 	all_utilities_file.close()
-	output_file.write("finished test!")
-	output_file.close()
 	fnull.close()
 
 

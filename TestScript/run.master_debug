@@ -1,0 +1,5 @@
+run.stdin cat  
+run.file sort 
+run.file split
+run.cp t.c cc  
+run.double diff
