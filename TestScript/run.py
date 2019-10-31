@@ -8,7 +8,7 @@ test_path = "./NewTest/"
 test_prefix = "t"
 test_num = 599
 timeout = 300
-output_filename = "python_log_flush2"
+output_filename = "python_log_flush"
 
 
 # can't change
@@ -28,7 +28,7 @@ def run_file(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 5:
+    if hang_count >= 3:
       break
     try:
       retcode = subprocess.call(["%s" % cmd, "%s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
@@ -50,7 +50,7 @@ def run_cp(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 2)[2]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 5:
+    if hang_count >= 3:
       break
     try:
       subprocess.call(["cp", "%s" % test_case, "%s" % file_tmp])
@@ -73,7 +73,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for test_case in test_list:
-    if hang_count >= 5:
+    if hang_count >= 3:
       break
     try:
       retcode = subprocess.call(["%s" % cmd, "< %s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
@@ -94,7 +94,7 @@ def run_double(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for i in range(len(test_list)):
-    if hang_count >= 5:
+    if hang_count >= 3:
       break
     test_case1 = random.choice(test_list)
     test_case2 = random.choice(test_list)
