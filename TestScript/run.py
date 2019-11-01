@@ -135,7 +135,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
     if type == "run.stdin":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
-      if os.path.exists(file_name):
+      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
             continue
@@ -148,7 +148,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
     elif type == "run.file":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
-      if os.path.exists(file_name):
+      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
             continue
@@ -161,7 +161,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
     elif type == "run.cp":
       cmd = item.split(" ", 2)[2]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
-      if os.path.exists(file_name):
+      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
             continue
@@ -174,7 +174,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
     elif type == "run.double":
       cmd = item.split(" ", 1)[1]
       file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
-      if os.path.exists(file_name):
+      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
             continue
