@@ -14,7 +14,7 @@ output_filename_dir = "./output_log"
 
 # can't change
 fnull = open(os.devnull, 'w')
-all_utilities_path = "./run.master_debug"
+all_utilities_path = "./run.master"
 # output_file = open(output_filename, "w")
 
 # test cases path
