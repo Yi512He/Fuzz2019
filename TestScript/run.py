@@ -7,14 +7,14 @@ import random
 test_path = "./NewTest/"
 test_prefix = "t"
 test_num = 599
-timeout = 300
+timeout = 30
 arg_error_detect = 3
-output_filename_dir = "./output_log"
+output_filename_dir = "./output_log_debug"
 
 
 # can't change
 fnull = open(os.devnull, 'w')
-all_utilities_path = "./run.master"
+all_utilities_path = "./run.master_debug"
 # output_file = open(output_filename, "w")
 
 # test cases path
@@ -29,10 +29,11 @@ def run_file(item, output, test_list, fnull, timeout):
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   for test_case in test_list:
+    #print(test_case)
     if hang_count >= arg_error_detect:
       break
     try:
-      retcode = subprocess.call(["%s" % cmd, "%s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      retcode = subprocess.call("%s %s" % (cmd, test_case), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
       output.write("%s %s %s hang\n" % (type, cmd, test_case))
@@ -54,8 +55,8 @@ def run_cp(item, output, test_list, fnull, timeout):
     if hang_count >= arg_error_detect:
       break
     try:
-      subprocess.call(["cp", "%s" % test_case, "%s" % file_tmp])
-      retcode = subprocess.call(["%s" % cmd, "%s" % file_tmp], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      subprocess.call(["cp %s" % test_case, "%s" % file_tmp])
+      retcode = subprocess.call("%s %s" % (cmd, file_tmp), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
       output.write("%s %s %s hang\n" % (type, cmd, test_case))
@@ -77,7 +78,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
     if hang_count >= arg_error_detect:
       break
     try:
-      retcode = subprocess.call(["%s" % cmd, "< %s" % test_case], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      retcode = subprocess.call("%s < %s" % (cmd, test_case), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
       output.write("%s %s %s hang\n" % (type, cmd, test_case))
@@ -100,7 +101,7 @@ def run_double(item, output, test_list, fnull, timeout):
     test_case1 = random.choice(test_list)
     test_case2 = random.choice(test_list)
     try:
-      retcode = subprocess.call(["%s" % cmd, "%s %s" % (test_case1, test_case2)], stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      retcode = subprocess.call("%s %s %s" % (cmd, test_case1, test_case2), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
       output.write("%s %s %s %s hang\n" % (type, cmd, test_case1, test_case2))
