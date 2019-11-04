@@ -76,6 +76,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 #define CHILD 0
 
@@ -97,7 +99,7 @@ int rpid = -1,wpid = -1,epid = -1; /* pids for the reader, writer and exec */
 
 int     tty, pty; /* tty and pty file descriptors */
 int ctty;
-char    ttyname[40];
+char    ttynames[40];
 char    *progname;
 
 struct  mesg {
@@ -139,12 +141,12 @@ struct  mesg {
         0,      "Signal 32"
 };
 
-int sigchld();
-int clean();
+void sigchld();
+void clean();
 void sigwinch();
-int clean_init();
-int clean_quit();
-int clean_term();
+void clean_init(int sigsum);
+void clean_quit(int sigsum);
+void clean_term(int sigsum);
 void doreader();
 void dowriter();
 void gettty();
@@ -156,11 +158,17 @@ void done();
 void execute(char **argv);
 void writer();
 void reader();
-int reader_done();
-int writer_done();
-int execute_done();
+void reader_done(int sigsum);
+void writer_done(int sigsum);
+void execute_done(int sigsum);
 void fatal();
 void usage();
+
+// added by zmx
+void clean_int(int sigsum);
+// void clean_quit(int sigsum);
+// void clean_term(int sigsum);
+
 
 int main(int argc, char **argv, char **envp)
 {
@@ -168,8 +176,8 @@ int main(int argc, char **argv, char **envp)
      float   f;
      extern int optind;
      extern char *optarg;
-     int clean_int(),clean_quit(),clean_term();
-     int sigwinch(),sigchld();
+     // int clean_int(),clean_quit(),clean_term();
+     void sigwinch(),sigchld();
 
      while ((c = getopt(argc, argv, "esxi:o:t:d:w:")) != EOF) {
 	  switch (c) {
@@ -257,7 +265,7 @@ int main(int argc, char **argv, char **envp)
 	  ;
 }
 
-int sigchld()
+void sigchld(int sigsum)
 {
      int pid;
      union wait status;
@@ -313,7 +321,7 @@ printf("kill wpid = %d\r\n",wpid),
      exit(0);
 }
 
-int clean()
+void clean()
 {
 #ifdef DEBUG
 puts("clean()\r");
@@ -336,7 +344,7 @@ printf("kill wpid = %d\r\n",wpid),
 }
 
 /* Handle window size change */
-void sigwinch()
+void sigwinch(int sigsum)
 {
      struct winsize ws;
 
@@ -346,18 +354,18 @@ void sigwinch()
 }
 
 /* Handle user interrupt */
-int clean_int()
+void clean_int(int sigsum)
 {
 #ifdef DEBUG
 puts("sigint");
 #endif
-     signal(SIGINT,SIG_DFL);
+     signal(SIGINT, SIG_DFL);
      clean();
-     kill(rpid,SIGINT);
+     kill(rpid, SIGINT);
 }
 
 /* Handle quit */
-int clean_quit()
+void clean_quit(int sigsum)
 {
 #ifdef DEBUG
 puts("sigquit\r");
@@ -368,7 +376,7 @@ puts("sigquit\r");
 }
 
 /* Handle user terminate */
-int clean_term()
+void clean_term(int sigsum)
 {
 #ifdef DEBUG
 puts("sigterm\r");
@@ -463,27 +471,27 @@ void setup_pty()
       */
      for (c = 'p'; c <= 's'; c++)
 	  for (i = 0; i < 16; i++) {
-	       sprintf(ttyname, "/dev/pty%c%x", c, i);
-	       if (stat(ttyname, &stb) < 0)
+	       sprintf(ttynames, "/dev/pty%c%x", c, i);
+	       if (stat(ttynames, &stb) < 0)
 		    fatal();
-	       if ((pty = open(ttyname, O_RDWR)) > 0) {
+	       if ((pty = open(ttynames, O_RDWR)) > 0) {
 		    /*
 		     * Check for validity of the other side 
 		     */
-		    ttyname[5] = 't';
-		    if (access(ttyname, R_OK | W_OK) == 0)
+		    ttynames[5] = 't';
+		    if (access(ttynames, R_OK | W_OK) == 0)
 			 return;
 		    else
 			 close(pty);
 	       }
 	  }
      fatal();
-     exit();
+     exit(1);
 }
 
 
 /*
- * Opens the slave device.  The device name is already in "ttyname" (put in
+ * Opens the slave device.  The device name is already in "ttynames" (put in
  * there by setup_pty(). 
  */
 void setup_tty()
@@ -497,11 +505,11 @@ void setup_tty()
      }
 
      /*
-      * Reopen "ttyname" as the control terminal 
+      * Reopen "ttynames" as the control terminal 
       */
-     tty = open(ttyname, O_RDWR);
+     tty = open(ttynames, O_RDWR);
      if (tty < 0) {
-	  perror(ttyname);
+	  perror(ttynames);
 	  exit(1);
      }
      /*
@@ -560,7 +568,7 @@ int executing = 1;
  */
 void execute(char **argv)
 {
-     int execute_done();
+     // int execute_done();
 
      signal(SIGUSR1,execute_done);
      if ((epid = fork()) == -1) {
@@ -650,8 +658,8 @@ void reader()
 {
      char    c[BUFSIZ];
      int     i;
-     int reader_done();
-     int writer_done();
+     // int reader_done();
+     // int writer_done();
 
      /*
       * Continuously read from "pty" until exhausted.  Write every character
@@ -682,10 +690,10 @@ void reader()
      puts("end reader\r");
 #endif
 
-     reader_done();
+     reader_done(666);
 }
 
-int reader_done()
+void reader_done(int sigsum)
 {
      sleep(1); /* Let epid die naturally */
 #ifdef DEBUG
@@ -694,13 +702,13 @@ printf("kill epid = %d\r\n",epid);
      kill(epid,SIGKILL); /* If it doesn't, kill it */
 }
 
-int writer_done()
+void writer_done(int sigsum)
 {
      writing = 0;
      ualarm(flagt,0);
 }
 
-void execute_done()
+void execute_done(int sigsum)
 {
      executing = 0;
 }
