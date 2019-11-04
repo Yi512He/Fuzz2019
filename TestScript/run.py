@@ -6,15 +6,15 @@ import random
 # can change
 test_path = "./NewTest/"
 test_prefix = "t"
-test_num = 599
-timeout = 30
+test_num = 899
+timeout = 300
 arg_error_detect = 3
-output_filename_dir = "./output_log_debug"
+output_filename_dir = "./output_log_899_timeout"
 
 
 # can't change
 fnull = open(os.devnull, 'w')
-all_utilities_path = "./run.master_debug"
+all_utilities_path = "./run.master_timeout"
 # output_file = open(output_filename, "w")
 
 # test cases path
@@ -28,6 +28,7 @@ def run_file(item, output, test_list, fnull, timeout):
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
+  retcode = 0
   for test_case in test_list:
     #print(test_case)
     if hang_count >= arg_error_detect:
@@ -42,7 +43,7 @@ def run_file(item, output, test_list, fnull, timeout):
       break
     else:
       hang_count = 0
-      if retcode < 0:
+      if retcode == 139:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
     # output.flush()
 
@@ -51,6 +52,7 @@ def run_cp(item, output, test_list, fnull, timeout):
   file_tmp = item.split(" ", 2)[1]
   cmd = item.split(" ", 2)[2]
   hang_count = 0
+  retcode = 0
   for test_case in test_list:
     if hang_count >= arg_error_detect:
       break
@@ -65,7 +67,7 @@ def run_cp(item, output, test_list, fnull, timeout):
       break
     else:
       hang_count = 0
-      if retcode < 0:
+      if retcode == 139:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
         subprocess.call(["rm", "%s" % file_tmp])
     # output.flush()
@@ -74,7 +76,9 @@ def run_stdin(item, output, test_list, fnull, timeout):
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
+  retcode = 0
   for test_case in test_list:
+    #print(test_case)
     if hang_count >= arg_error_detect:
       break
     try:
@@ -87,7 +91,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
       break
     else:
       hang_count = 0
-      if retcode < 0:
+      if retcode == 139:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
     # output.flush()
 
@@ -95,6 +99,7 @@ def run_double(item, output, test_list, fnull, timeout):
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
+  retcode = 0
   for i in range(len(test_list)):
     if hang_count >= arg_error_detect:
       break
@@ -110,7 +115,7 @@ def run_double(item, output, test_list, fnull, timeout):
       break
     else:
       hang_count = 0
-      if retcode < 0:
+      if retcode == 139:
         output.write("%s %s %s %s error: %d\n" % (type, cmd, test_case1, test_case2, retcode))
     # output.flush()
 
@@ -135,12 +140,14 @@ with open(all_utilities_path, "r") as all_utilities_file:
 
     if type == "run.stdin":
       cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      #print("h1")
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd.replace("/", "-")))
       if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
             continue
       output_file = open(file_name, "w")
+      #print("h2")
       output_file.write("start: %s\n" % item)
       run_stdin(item, output_file, test_list, fnull, timeout)
       output_file.write("finished\n")
@@ -148,7 +155,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
 
     elif type == "run.file":
       cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd.replace("/", "-")))
       if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
@@ -161,7 +168,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
 
     elif type == "run.cp":
       cmd = item.split(" ", 2)[2]
-      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd.replace("/", "-")))
       if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
@@ -174,7 +181,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
 
     elif type == "run.double":
       cmd = item.split(" ", 1)[1]
-      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd))
+      file_name = os.path.join(output_filename_dir, "%s.%s" % (type, cmd.replace("/", "-")))
       if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
         with open(file_name, "r") as f:
           if f.readlines()[-1] == "finished\n":
