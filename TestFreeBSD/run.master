@@ -1,0 +1,75 @@
+run.stdin as
+run.stdin cat
+run.stdin checknr
+run.stdin col
+run.stdin colcrt
+run.stdin colrm
+run.stdin cpp
+run.stdin dc
+run.stdin neqn
+run.stdin deroff
+run.stdin eqn
+run.stdin ex
+run.stdin ed
+run.stdin expand
+run.stdin fmt
+run.stdin fold
+run.stdin ftp
+run.stdin grep a
+run.stdin grn
+run.stdin head
+run.stdin indent
+run.stdin indent -st
+run.stdin lex
+run.stdin m4
+run.stdin more
+run.stdin nroff
+run.stdin pic
+run.stdin pr
+run.stdin refer
+run.stdin rev
+run.stdin sed
+run.file sh
+run.stdin soelim
+run.stdin sort
+run.stdin strings
+run.stdin sum
+run.stdin tail
+run.stdin tbl
+run.stdin tee
+run.stdin telnet
+run.stdin tr a b
+run.stdin troff -t
+run.stdin tsort
+run.stdin ul
+run.stdin uniq
+run.stdin units
+run.stdin vgrind -t
+run.stdin wc
+run.file awk '{print}'
+run.file mail -s "subject" 15927119728@163.com <
+run.file make -f
+run.file nm
+run.file nroff
+run.file sort
+run.file split
+run.file strip
+run.file yacc
+#run.cp - calendar calendar
+#run.cp t.c cc
+#run.cp t compress
+#run.cp t.f f77
+#run.cp t.c lint
+#run.cp t.p pc
+#run.cp t split -10
+#run.cp t.c ctags
+#run.cp tags ptags
+#run.cp tags ctree
+#run.stdin e
+#run.stdin /bin/mail
+#run.stdin /usr/ucb/Mail
+run.stdin csh
+run.stdin xargs test
+run.double diff
+run.double join
+run.double comm
