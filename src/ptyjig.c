@@ -268,7 +268,8 @@ int main(int argc, char **argv, char **envp)
 void sigchld(int sigsum)
 {
      int pid;
-     union wait status;
+     //union wait status;
+     int status;
 
 #ifdef DEBUG
 puts("sigchld\r");
@@ -279,10 +280,10 @@ puts("sigchld\r");
 #ifdef DEBUG
 	  printf("pid = %d\r\n",pid);
 	  printf("status = %d %d %d %d %d\r\n",
-		  status.w_termsig,status.w_coredump,status.w_retcode,
-		  status.w_stopval,status.w_stopsig);
+		  WTERMSIG(status), WCOREDUMP(status),WEXITSTATUS(status),
+		  WIFSTOPPED(status),WSTOPSIG(status));
 #endif
-          if (status.w_stopsig == SIGTSTP) {
+          if (WSTOPSIG(status) == SIGTSTP) {
 	       kill(pid,SIGCONT);
 	       return;
 	  }
@@ -298,7 +299,7 @@ puts("sigchld\r");
                printf("kill epid = %d\r\n",epid);
 #endif
 	       kill(epid,SIGKILL);   /* kill the exec too */
-	       kill(rpid,status.w_termsig); /* use the same method to suicide */
+	       kill(rpid,WTERMSIG(status)); /* use the same method to suicide */
 	  }
 	  kill(epid,SIGKILL); /* Just to make sure it is killed */
 	  if (pid != wpid && wpid != -1)
@@ -306,16 +307,16 @@ puts("sigchld\r");
 printf("kill wpid = %d\r\n",wpid),
 #endif
 	       kill(wpid,SIGKILL);
-	  if (status.w_termsig)
+	  if (WTERMSIG(status))
 	       fprintf(stderr,"%s: %s%s\n",progname,
-		   mesg[status.w_termsig].pname,
-		   status.w_coredump? " (core dumped)": "");
+		   mesg[WTERMSIG(status)].pname,
+		   WCOREDUMP(status)? " (core dumped)": "");
 
           /* If process terminates normally, return its retcode */
 	  /* If abnormally, return termsig.  This is not exactly */
 	  /* the same as csh, since the csh method is not too obvious */
 
-	  exit(status.w_termsig? status.w_termsig: status.w_retcode);
+	  exit(WTERMSIG(status)? WTERMSIG(status): WEXITSTATUS(status));
      }
 
      exit(0);
