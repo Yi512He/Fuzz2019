@@ -461,6 +461,7 @@ void setup_pty() {
   struct stat stb;
   int     foundOne = FALSE;
   printf("enter setup_pty\n");
+  int rc;
 
 
   /*
@@ -468,37 +469,54 @@ void setup_pty() {
    * Solaris can handle up to 's' and up to 16, respectively, but
    * to be portable, we use only the overlapping range.
    */
-  for( c = 'p' ; c <= 'r' && !foundOne ; c++ ) {
-    for( i = 0 ; i <= 9 && !foundOne ; i++ ) {
-      sprintf( ttyNameUsed, "/dev/pty%c%x", c, i );
+ //  for( c = 'p' ; c <= 'r' && !foundOne ; c++ ) {
+ //    for( i = 0 ; i <= 9 && !foundOne ; i++ ) {
+ //      sprintf( ttyNameUsed, "/dev/pty%c%x", c, i );
 
-      if( stat(ttyNameUsed, &stb) < 0 ) {
-        //fprintf( stderr, "ptyjig: no pty's available\n" );
-        //exit( 2 );
-	printf("%s\n", ttyNameUsed);
-      }
+ //      if( stat(ttyNameUsed, &stb) < 0 ) {
+ //        //fprintf( stderr, "ptyjig: no pty's available\n" );
+ //        //exit( 2 );
+	// printf("%s\n", ttyNameUsed);
+ //      }
 
-      if(  (pty = open( ttyNameUsed, O_RDWR )) > 0  ) {
-        /* Check for validity of the other side */
-        ttyNameUsed[5] = 't';
-        printf("open one tty\n");
+ //      if(  (pty = open( ttyNameUsed, O_RDWR )) > 0  ) {
+ //        /* Check for validity of the other side */
+ //        ttyNameUsed[5] = 't';
+ //        printf("open one tty\n");
 
-        if(  access( ttyNameUsed, R_OK | W_OK ) == 0  ) {
-          printf("access the pty\n");
-          foundOne = TRUE;
-        }
-        else {
-          close( pty );
-        }
-      }
-    }
+ //        if(  access( ttyNameUsed, R_OK | W_OK ) == 0  ) {
+ //          printf("access the pty\n");
+ //          foundOne = TRUE;
+ //        }
+ //        else {
+ //          close( pty );
+ //        }
+ //      }
+ //    }
+ //  }
+  pty = posix_openpt(O_RDWR);
+  if (pty < 0) {
+    fprintf(stderr, "Error %d on posix_openpt()\n", errno);
+    return 1;
   }
 
-  if( !(foundOne) ) {
-	  printf("haha");
-    fprintf( stderr, "ptyjig: no pty's available\n" );
-    exit( 2 );
+  rc = grantpt(fdm);
+  if (rc != 0) {
+    fprintf(stderr, "Error %d on grantpt()\n", errno);
+    return 1;
   }
+
+  rc = unlockpt(fdm);
+  if (rc != 0) {
+    fprintf(stderr, "Error %d on unlockpt()\n", errno);
+    return 1;
+  }
+
+  // if( !(foundOne) ) {
+	 //  printf("haha");
+  //   fprintf( stderr, "ptyjig: no pty's available\n" );
+  //   exit( 2 );
+  // }
 }
 
 
@@ -523,8 +541,9 @@ void setup_tty() {
 #endif
 
   /* Open modified "ttyNameUsed" as the control terminal */
-  ttyNameUsed[5] = 't';
-  tty = open( ttyNameUsed, O_RDWR );
+  // ttyNameUsed[5] = 't';
+  // tty = open( ttyNameUsed, O_RDWR );
+  tty = open(ptsname(pty), O_RDWR);
 
   if( tty < 0 ) {
     perror( ttyNameUsed );
@@ -663,6 +682,7 @@ void writer() {
   /*
    * Read from keyboard continuously and send it to "pty" 
    */
+  // read(0, &c, 1)表示从stdin读取
   while( read(0, &c, 1) == 1 ) { 
     if( write(pty, &c, 1) != 1 ) {
       break;
