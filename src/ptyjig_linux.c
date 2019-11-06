@@ -74,6 +74,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <strings.h>
+#include <stdlib.h>
 
 
 #ifdef SOLARIS
