@@ -460,6 +460,7 @@ void setup_pty() {
   int     i;
   struct stat stb;
   int     foundOne = FALSE;
+  printf("enter setup_pty\n");
 
 
   /*
@@ -480,8 +481,10 @@ void setup_pty() {
       if(  (pty = open( ttyNameUsed, O_RDWR )) > 0  ) {
         /* Check for validity of the other side */
         ttyNameUsed[5] = 't';
+        printf("open one tty\n");
 
         if(  access( ttyNameUsed, R_OK | W_OK ) == 0  ) {
+          printf("access the pty\n");
           foundOne = TRUE;
         }
         else {
