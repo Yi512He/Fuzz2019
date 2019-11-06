@@ -75,6 +75,7 @@
 #include <stdio.h>
 #include <strings.h>
 #include <stdlib.h>
+#include <errno.h>
 
 
 #ifdef SOLARIS
@@ -501,13 +502,13 @@ void setup_pty() {
     return 1;
   }
 
-  rc = grantpt(fdm);
+  rc = grantpt(pty);
   if (rc != 0) {
     fprintf(stderr, "Error %d on grantpt()\n", errno);
     return 1;
   }
 
-  rc = unlockpt(fdm);
+  rc = unlockpt(pty);
   if (rc != 0) {
     fprintf(stderr, "Error %d on unlockpt()\n", errno);
     return 1;
