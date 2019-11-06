@@ -7,14 +7,14 @@ import random
 test_path = "./NewTest/"
 test_prefix = "t"
 test_num = 899
-timeout = 300
+timeout = 20
 arg_error_detect = 3
-output_filename_dir = "./output_log_899_timeout"
+output_filename_dir = "./output_log_899"
 
 
 # can't change
 fnull = open(os.devnull, 'w')
-all_utilities_path = "./run.master_timeout"
+all_utilities_path = "./run.master"
 # output_file = open(output_filename, "w")
 
 # test cases path
@@ -54,22 +54,23 @@ def run_cp(item, output, test_list, fnull, timeout):
   hang_count = 0
   retcode = 0
   for test_case in test_list:
+    #print(test_case)
     if hang_count >= arg_error_detect:
       break
     try:
-      subprocess.call(["cp %s" % test_case, "%s" % file_tmp])
+      subprocess.call("cp %s %s" % (test_case, file_tmp), shell=True)
       retcode = subprocess.call("%s %s" % (cmd, file_tmp), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
       output.write("%s %s %s hang\n" % (type, cmd, test_case))
-    except(FileNotFoundError):
-      output.write("%s %s not found\n" % (type, cmd))
-      break
+    #except(FileNotFoundError):
+    #  output.write("%s %s not found\n" % (type, cmd))
+    #  break
     else:
       hang_count = 0
       if retcode == 139:
         output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
-        subprocess.call(["rm", "%s" % file_tmp])
+        subprocess.call("rm %s" % file_tmp, shell=True)
     # output.flush()
 	
 def run_stdin(item, output, test_list, fnull, timeout):
