@@ -55,21 +55,22 @@ run.file sort
 run.file split
 run.file strip
 run.file yacc
-#run.cp - calendar calendar
-#run.cp t.c cc
-#run.cp t compress
-#run.cp t.f f77
-#run.cp t.c lint
-#run.cp t.p pc
-#run.cp t split -10
-#run.cp t.c ctags
-#run.cp tags ptags
-#run.cp tags ctree
-#run.stdin e
-#run.stdin /bin/mail
-#run.stdin /usr/ucb/Mail
+run.cp - calendar calendar
+run.cp t.c cc
+run.cp t compress
+run.cp t.f f77
+run.cp t.c lint
+run.cp t.p pc
+run.cp t split -10
+run.cp t.c ctags
+run.cp tags ptags
+run.cp tags ctree
+run.stdin e
+run.stdin /bin/mail
+run.stdin /usr/ucb/Mail
 run.stdin csh
 run.stdin xargs test
 run.double diff
 run.double join
 run.double comm
+run.double sdiff
