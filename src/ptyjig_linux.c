@@ -77,6 +77,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+int posix_openpt(int flags);
 
 
 #ifdef SOLARIS
@@ -500,19 +501,19 @@ void setup_pty() {
   pty = posix_openpt(O_RDWR);
   if (pty < 0) {
     fprintf(stderr, "Error %d on posix_openpt()\n", errno);
-    return 1;
+    exit(1);
   }
 
   rc = grantpt(pty);
   if (rc != 0) {
     fprintf(stderr, "Error %d on grantpt()\n", errno);
-    return 1;
+    exit(1);
   }
 
   rc = unlockpt(pty);
   if (rc != 0) {
     fprintf(stderr, "Error %d on unlockpt()\n", errno);
-    return 1;
+    exit(1);
   }
 
   // if( !(foundOne) ) {
