@@ -76,6 +76,7 @@
 #include <strings.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <fcntl.h>
 
 
 #ifdef SOLARIS
