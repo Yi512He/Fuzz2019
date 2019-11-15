@@ -6,7 +6,6 @@ import random
 # can change
 test_path = "./NewTest/"
 test_prefix = "t"
-test_num = 899
 timeout = 20
 arg_error_detect = 3
 output_filename_dir = "./output_log_899"
@@ -20,11 +19,11 @@ all_utilities_path = "./run.master"
 # test cases path
 test_list = []
 files = os.listdir(test_path)
-files = [file for file in files if file.startswith("t")]
+files = [file for file in files if file.startswith(test_prefix)]
+files = ["%s%s" % (test_path, file) for file in files]
 print(files)
 exit()
-for i in range(1, test_num+1):
-  test_list.append("%s%s%d" % (test_path, test_prefix, i))
+
 
 
 
