@@ -10,21 +10,15 @@ timeout = 20
 arg_error_detect = 3
 output_filename_dir = "./output_log_899"
 
-
 # can't change
 fnull = open(os.devnull, 'w')
 all_utilities_path = "./run.master"
-# output_file = open(output_filename, "w")
 
 # test cases path
 test_list = []
-files = os.listdir(test_path)
-files = [file for file in files if file.startswith(test_prefix)]
-files = ["%s%s" % (test_path, file) for file in files]
-print(files)
-exit()
-
-
+test_list = os.listdir(test_path)
+test_list = [file for file in test_list if file.startswith(test_prefix)]
+test_list = ["%s%s" % (test_path, file) for file in test_list]
 
 
 def run_file(item, output, test_list, fnull, timeout):
