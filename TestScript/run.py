@@ -76,7 +76,7 @@ def run_file(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
-      print(final_cmd)
+      #print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -123,7 +123,7 @@ def run_cp(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + file_tmp
-      print(final_cmd)
+      #print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -169,7 +169,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
-      print(final_cmd)
+      #print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -216,7 +216,7 @@ def run_double(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
-      print(final_cmd)
+      #print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
