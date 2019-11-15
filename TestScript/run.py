@@ -43,14 +43,9 @@ test_list = ["%s%s" % (test_dir, file) for file in test_list]
 def random_subset(s):
   out = ""
   for el in s:
-    print("el")
-    print(el)
-    print(type(el));exit()
     # random coin flip
     if random.random() > 0.5:
       out = out + el + " "
-  print(out)
-  print("haha out");exit()
   return out
 
 
@@ -61,10 +56,8 @@ def run_file(item, output, test_list, fnull, timeout):
 
   # idx >= 0 when match "[" successfully
   if idx >= 0:
-    options = item[idx:]
-    print(options)
-    exec('options = %s' % options)
-    print(type(options))
+    options = item[idx + 1: -1]
+    options = options.split()
     item = item[0: idx]
 
   cmd_type = item.split(" ", 1)[0]
@@ -80,13 +73,10 @@ def run_file(item, output, test_list, fnull, timeout):
     try:
       # if options exist, append options to the final_cmd
       if idx >= 0:
-        print(options)
         options_random = random_subset(options)
-        print(options_random)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
       print(final_cmd)
-      print("haha");exit()
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
