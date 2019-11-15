@@ -6,7 +6,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "./NewTest/"
+test_dir = "./NewTest_debug/"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -19,10 +19,10 @@ timeout = 20
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_path = "./run.master"
+all_utilities_path = "./run.master_debug"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./output_log_899"
+output_dir = "./output_log_debug"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -45,6 +45,7 @@ def run_file(item, output, test_list, fnull, timeout):
   hang_count = 0
   retcode = 0
   for test_case in test_list:
+    print(test_case)
     if hang_count >= hang_num:
       break
     try:
@@ -68,7 +69,7 @@ def run_cp(item, output, test_list, fnull, timeout):
   hang_count = 0
   retcode = 0
   for test_case in test_list:
-    #print(test_case)
+    print(test_case)
     if hang_count >= hang_num:
       break
     try:
@@ -93,7 +94,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
   hang_count = 0
   retcode = 0
   for test_case in test_list:
-    #print(test_case)
+    print(test_case)
     if hang_count >= hang_num:
       break
     try:
@@ -216,7 +217,7 @@ with open(combine_filename, "w") as file_to_write:
   dir = os.listdir(output_dir)
   dir.sort()
   for item in dir:
-    with open(os.path.join(source_dir, item), "r") as file_to_read:
+    with open(os.path.join(output_dir, item), "r") as file_to_read:
       file_to_write.write(file_to_read.read())
 
 
