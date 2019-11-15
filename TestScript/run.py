@@ -19,7 +19,7 @@ timeout = 20
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_path = "./run.master_debug"
+all_utilities_file = "./run.master_debug"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
 output_dir = "./output_log_debug"
@@ -39,116 +39,212 @@ test_list = os.listdir(test_dir)
 test_list = [file for file in test_list if file.startswith(test_prefix)]
 test_list = ["%s%s" % (test_dir, file) for file in test_list]
 
-def run_file(item, output, test_list, fnull, timeout):
+
+def random_subset(s):
+  out = set()
+  for el in s:                                                                                                                    
+    # random coin flip
+    if random.randint(0, 1) == 0:
+      out.add(el)
+  return out
+
+
+# run cmds with input from file
+def run_file(item, output, test_list, fnull, timeout): 
+  # check if there are options
+  idx = item.find("[")
+
+  # idx >= 0 when match "[" successfully
+  if idx >= 0:
+    options = item[idx + 1: 0]
+    options = " ".join(options)
+    item = item[0: idx]
+
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   retcode = 0
+
   for test_case in test_list:
-    print(test_case)
+    # if there are hang_num successive hangs, break
     if hang_count >= hang_num:
       break
+
     try:
-      retcode = subprocess.call("%s %s" % (cmd, test_case), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      # if options exist, append options to the final_cmd
+      if idx >= 0:
+        options_random = " ".join(random_subset(options))
+        final_cmd = cmd + " " + options_random
+      final_cmd = final_cmd + " " + test_case
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
-      output.write("%s %s %s hang\n" % (type, cmd, test_case))
+      output.write("%s %s hang\n" % (type, final_cmd))
+
     except(FileNotFoundError):
-      output.write("%s %s not found\n" % (type, cmd))
+      output.write("%s %s not found\n" % (type, final_cmd))
       break
+
     else:
       hang_count = 0
+      # 139 means segment fault
       if retcode == 139:
-        output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
-    # output.flush()
+        output.write("%s %s error: %d\n" % (type, final_cmd, retcode))
 
-def run_cp(item, output, test_list, fnull, timeout):
+
+# run cmds with input from file with specified extension name
+def run_cp(item, output, test_list, fnull, timeout): 
+  # check if there are options
+  idx = item.find("[")
+
+  # idx >= 0 when match "[" successfully
+  if idx >= 0:
+    options = item[idx + 1: 0]
+    options = " ".join(options)
+    item = item[0: idx]
+
   type = item.split(" ", 2)[0]
   file_tmp = item.split(" ", 2)[1]
   cmd = item.split(" ", 2)[2]
   hang_count = 0
   retcode = 0
+
   for test_case in test_list:
-    print(test_case)
+    # if there are hang_num successive hangs, break
     if hang_count >= hang_num:
       break
+
     try:
       subprocess.call("cp %s %s" % (test_case, file_tmp), shell=True)
-      retcode = subprocess.call("%s %s" % (cmd, file_tmp), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      # if options exist, append options to the final_cmd
+      if idx >= 0:
+        options_random = " ".join(random_subset(options))
+        final_cmd = cmd + " " + options_random
+      final_cmd = final_cmd + " " + test_case
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
-      output.write("%s %s %s hang\n" % (type, cmd, test_case))
-    #except(FileNotFoundError):
-    #  output.write("%s %s not found\n" % (type, cmd))
-    #  break
+      output.write("%s %s hang\n" % (type, final_cmd))
+
+    except(FileNotFoundError):
+      output.write("%s %s not found\n" % (type, final_cmd))
+      break
+
     else:
       hang_count = 0
+      # 139 means segment fault
       if retcode == 139:
-        output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
+        output.write("%s %s error: %d\n" % (type, final_cmd, retcode))
         subprocess.call("rm %s" % file_tmp, shell=True)
-    # output.flush()
-	
-def run_stdin(item, output, test_list, fnull, timeout):
+
+
+# run cmds with input from stdin
+def run_stdin(item, output, test_list, fnull, timeout): 
+  # check if there are options
+  idx = item.find("[")
+
+  # idx >= 0 when match "[" successfully
+  if idx >= 0:
+    options = item[idx + 1: 0]
+    options = " ".join(options)
+    item = item[0: idx]
+
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   retcode = 0
+
   for test_case in test_list:
-    print(test_case)
+    # if there are hang_num successive hangs, break
     if hang_count >= hang_num:
       break
+
     try:
-      retcode = subprocess.call("%s < %s" % (cmd, test_case), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      # if options exist, append options to the final_cmd
+      if idx >= 0:
+        options_random = " ".join(random_subset(options))
+        final_cmd = cmd + " " + options_random
+      final_cmd = final_cmd + " < " + test_case
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
-      output.write("%s %s %s hang\n" % (type, cmd, test_case))
+      output.write("%s %s hang\n" % (type, final_cmd))
+
     except(FileNotFoundError):
-      output.write("%s %s not found\n" % (type, cmd))
+      output.write("%s %s not found\n" % (type, final_cmd))
       break
+
     else:
       hang_count = 0
+      # 139 means segment fault
       if retcode == 139:
-        output.write("%s %s %s error: %d\n" % (type, cmd, test_case, retcode))
-    # output.flush()
+        output.write("%s %s error: %d\n" % (type, final_cmd, retcode))
 
-def run_double(item, output, test_list, fnull, timeout):
+
+# run cmds with two input files
+def run_double(item, output, test_list, fnull, timeout): 
+  # check if there are options
+  idx = item.find("[")
+
+  # idx >= 0 when match "[" successfully
+  if idx >= 0:
+    options = item[idx + 1: 0]
+    options = " ".join(options)
+    item = item[0: idx]
+
   type = item.split(" ", 1)[0]
   cmd = item.split(" ", 1)[1]
   hang_count = 0
   retcode = 0
+
   for i in range(len(test_list)):
+    # if there are hang_num successive hangs, break
     if hang_count >= hang_num:
       break
-    test_case1 = random.choice(test_list)
-    test_case2 = random.choice(test_list)
+
     try:
-      retcode = subprocess.call("%s %s %s" % (cmd, test_case1, test_case2), shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+      test_case1 = random.choice(test_list)
+      test_case2 = random.choice(test_list)
+
+      # if options exist, append options to the final_cmd
+      if idx >= 0:
+        options_random = " ".join(random_subset(options))
+        final_cmd = cmd + " " + options_random
+      final_cmd = final_cmd + " " + test_case1 + " " + test_case2
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
-      output.write("%s %s %s %s hang\n" % (type, cmd, test_case1, test_case2))
+      output.write("%s %s hang\n" % (type, final_cmd))
+
     except(FileNotFoundError):
-      output.write("%s %s not found\n" % (type, cmd))
+      output.write("%s %s not found\n" % (type, final_cmd))
       break
+
     else:
       hang_count = 0
+      # 139 means segment fault
       if retcode == 139:
-        output.write("%s %s %s %s error: %d\n" % (type, cmd, test_case1, test_case2, retcode))
-    # output.flush()
+        output.write("%s %s error: %d\n" % (type, final_cmd, retcode))
 
 
 
 
 
 
-
-# start
+# the script start here
 # create dir for log
 if not os.path.exists(output_dir):
   os.mkdir(output_dir)
 
 # open run.master and test every cmd
-with open(all_utilities_path, "r") as all_utilities_file:
-  utilities = all_utilities_file.readlines()
+with open(all_utilities_file, "r") as all_utilities_reader:
+  utilities = all_utilities_reader.readlines()
+
+  # process every line in all_utilities_file
   for item in utilities:
     item = item.strip()
     type = item.split(" ", 1)[0]
@@ -208,7 +304,7 @@ with open(all_utilities_path, "r") as all_utilities_file:
       output_file.write("finished\n")
       output_file.close()
 
-  all_utilities_file.close()
+  all_utilities_reader.close()
   fnull.close()
 
 
