@@ -19,6 +19,10 @@ all_utilities_path = "./run.master"
 
 # test cases path
 test_list = []
+files = os.listdir(test_path)
+files = [file for file in files if file.startswith("t")]
+print(files)
+exit()
 for i in range(1, test_num+1):
   test_list.append("%s%s%d" % (test_path, test_prefix, i))
 
