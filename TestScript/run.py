@@ -6,7 +6,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "./NewTest_debug/"
+test_dir = "./NewTest/"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -19,10 +19,10 @@ timeout = 20
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./run.master_debug"
+all_utilities_file = "./run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./output_log_debug"
+output_dir = "./output_log_options"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -71,12 +71,13 @@ def run_file(item, output, test_list, fnull, timeout):
       break
 
     try:
+      final_cmd = ""
       # if options exist, append options to the final_cmd
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case
-      #print(final_cmd)
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -118,12 +119,13 @@ def run_cp(item, output, test_list, fnull, timeout):
 
     try:
       subprocess.call("cp %s %s" % (test_case, file_tmp), shell=True)
+      final_cmd = ""
       # if options exist, append options to the final_cmd
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + file_tmp
-      #print(final_cmd)
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -164,12 +166,13 @@ def run_stdin(item, output, test_list, fnull, timeout):
       break
 
     try:
+      final_cmd = ""
       # if options exist, append options to the final_cmd
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
-      #print(final_cmd)
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -211,12 +214,13 @@ def run_double(item, output, test_list, fnull, timeout):
       test_case1 = random.choice(test_list)
       test_case2 = random.choice(test_list)
 
+      final_cmd = ""
       # if options exist, append options to the final_cmd
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
-      #print(final_cmd)
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
