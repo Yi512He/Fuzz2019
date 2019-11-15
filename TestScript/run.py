@@ -101,9 +101,8 @@ def run_cp(item, output, test_list, fnull, timeout):
 
   # idx >= 0 when match "[" successfully
   if idx >= 0:
-    options = item[idx:]
-    exec("options = %s" % options)
-    options = " ".join(options)
+    options = item[idx + 1: -1]
+    options = options.split()
     item = item[0: idx]
 
   cmd_type = item.split(" ", 2)[0]
@@ -123,7 +122,8 @@ def run_cp(item, output, test_list, fnull, timeout):
       if idx >= 0:
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
-      final_cmd = final_cmd + " " + test_case
+      final_cmd = final_cmd + " " + file_tmp
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -149,8 +149,8 @@ def run_stdin(item, output, test_list, fnull, timeout):
 
   # idx >= 0 when match "[" successfully
   if idx >= 0:
-    options = item[idx:]
-    options = " ".join(options)
+    options = item[idx + 1: -1]
+    options = options.split()
     item = item[0: idx]
 
   cmd_type = item.split(" ", 1)[0]
@@ -169,6 +169,7 @@ def run_stdin(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " < " + test_case
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
@@ -185,7 +186,6 @@ def run_stdin(item, output, test_list, fnull, timeout):
       if retcode == 139:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
-
 # run cmds with two input files
 def run_double(item, output, test_list, fnull, timeout): 
   # check if there are options
@@ -193,8 +193,8 @@ def run_double(item, output, test_list, fnull, timeout):
 
   # idx >= 0 when match "[" successfully
   if idx >= 0:
-    options = item[idx:]
-    options = " ".join(options)
+    options = item[idx + 1: -1]
+    options = options.split()
     item = item[0: idx]
 
   cmd_type = item.split(" ", 1)[0]
@@ -216,6 +216,7 @@ def run_double(item, output, test_list, fnull, timeout):
         options_random = random_subset(options)
         final_cmd = cmd + " " + options_random
       final_cmd = final_cmd + " " + test_case1 + " " + test_case2
+      print(final_cmd)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
 
     except(subprocess.TimeoutExpired):
