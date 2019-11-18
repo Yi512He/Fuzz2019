@@ -1,53 +1,50 @@
-run.stdin as
-run.stdin cat
-run.stdin checknr
-run.stdin col
-run.stdin colcrt
+run.stdin as [-a -D -L -R -W -Z -w]
+run.stdin bc [-l -q]
+run.stdin cat [-b -e -n -s -t -u] 
+run.stdin col [-b -f -h -p -x]
+run.stdin colcrt [- -2]
 run.stdin colrm
-run.stdin cpp
+run.stdin cpp [-E -S -c]
 run.stdin dc
-run.stdin neqn
-run.stdin deroff
-run.stdin eqn
-run.stdin ex
-run.stdin ed
+run.stdin eqn [-C -N -r]
+run.stdin ex 
 run.stdin expand
 run.stdin fmt
-run.stdin fold
-run.stdin ftp
-run.stdin grep a
-run.stdin grn
+run.stdin fold [-bs]
+run.stdin ftp [-A -a -d -e -f -g -i -n -p -R -t]
+run.stdin grep a [-c -I -y -i]
+run.stdin grn [-C]
 run.stdin head
-run.stdin indent
-run.stdin indent -st
+run.stdin indent [-bacc -bad -bc -bl -st]
+run.stdin flex
 run.stdin lex
-run.stdin m4
+run.stdin m4 [-gPs -Uname]
 run.stdin more
+run.stdin neqn
 run.stdin nroff
-run.stdin pic
-run.stdin pr
+run.stdin pic [-t]
+run.stdin pr [-n -s -e]
 run.stdin refer
 run.stdin rev
 run.stdin sed
-run.file sh
+run.file sh [-c -s]
 run.stdin soelim
-run.stdin sort
-run.stdin strings
+run.stdin sort [-m -s]
+run.stdin strings [-o -a]
 run.stdin sum
 run.stdin tail
 run.stdin tbl
-run.stdin tee
-run.stdin telnet
-run.stdin tr a b
-run.stdin troff -t
+run.stdin tee [-ai]
+run.stdin telnet [-c -d -4 -6 -8 -E -K -L -N -r -y -u]
+run.stdin tr a b 
+run.stdin troff [-t -a]
 run.stdin tsort
-run.stdin ul
-run.stdin uniq
-run.stdin units
-run.stdin vgrind -t
-run.stdin wc
+run.stdin ul [-i]
+run.stdin uniq [-c -d -u -i]
+run.stdin units [-e -t -q]
+run.stdin vgrind [- -W -f -l -n -t -x]
+run.stdin wc [-L -c -l -m -w]
 run.file awk '{print}'
-run.file mail -s "subject" 15927119728@163.com <
 run.file make -f
 run.file nm
 run.file nroff
@@ -65,9 +62,6 @@ run.cp t split -10
 run.cp t.c ctags
 run.cp tags ptags
 run.cp tags ctree
-run.stdin e
-run.stdin /bin/mail
-run.stdin /usr/ucb/Mail
 run.stdin csh
 run.stdin xargs test
 run.double diff
