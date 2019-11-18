@@ -6,23 +6,23 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "./NewTest/"
+test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_small"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
 
 # if the cmd does not finish in timeout seconds, the test result will be considered as a hang
-timeout = 20
+timeout = 300
 
 # if there are hang_num successive hangs, no need to continue the testing on the current cmd
 # check the way you use the cmd, or increase the timeout and retest, or consider the results as hangs
-hang_num = 3
+hang_num = 2
 
 # the script will test each cmd in run.master on the test cases in test_dir
 all_utilities_file = "./run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./output_log_options"
+output_dir = "./output_log_options_small_timeout"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -37,7 +37,7 @@ fnull = open(os.devnull, 'w')
 test_list = []
 test_list = os.listdir(test_dir)
 test_list = [file for file in test_list if file.startswith(test_prefix)]
-test_list = ["%s%s" % (test_dir, file) for file in test_list]
+test_list = [os.path.join(test_dir, file) for file in test_list]
 
 
 def random_subset(s):
