@@ -6,7 +6,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_small"
+test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_huge"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -22,7 +22,7 @@ hang_num = 2
 all_utilities_file = "./run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./output_log_options_small_timeout"
+output_dir = "./output_log_options_huge_timeout"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -130,7 +130,7 @@ def run_cp(item, output, test_list, fnull, timeout):
 
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
-      output.write("%s %s hang\n" % (cmd_type, final_cmd))
+      output.write("%s %s %s hang\n" % (cmd_type, final_cmd, test_case))
 
     except(FileNotFoundError):
       output.write("%s %s not found\n" % (cmd_type, final_cmd))
@@ -140,7 +140,7 @@ def run_cp(item, output, test_list, fnull, timeout):
       hang_count = 0
       # 139 means segment fault
       if retcode == 139:
-        output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
+        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
         subprocess.call("rm %s" % file_tmp, shell=True)
 
 
