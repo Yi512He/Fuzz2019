@@ -250,6 +250,9 @@ void sigchld(int sig) {
 
   /* Guarantee to return since a child is dead */
   pid = wait3( (int*)&status, WUNTRACED, 0 );  
+#ifdef DEBUG
+    printf("sigchld wait3: pid = %d\n",pid);
+#endif
 
   if( pid ) {
 #ifdef DEBUG
@@ -641,6 +644,9 @@ void execute( char** cmd ) {
 
     exit(1);
   }
+#ifdef DEBUG
+    printf("execPID: pid = %d\n",execPID);
+#endif
 
 
   while( executing ); /* let child run until it gives signal */
@@ -737,6 +743,9 @@ void reader() {
   int     i;
 
 
+#ifdef DEBUG
+    printf("reader(): pid = %d\n",getpid());
+#endif
   /*
    * Continuously read from "pty" until exhausted.  Write every character
    * to stdout if -x flag is not present, and to "fileo" if -o flag is on.   
@@ -800,10 +809,10 @@ void dowriter() {
     writerPID = getpid();
     writer();
   }
-     
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: writerPID = %d\n", writerPID );
+    printf("dowriter(): pid = %d\n",writerPID);
 #endif
+     
 }
 
 
@@ -864,6 +873,9 @@ int main( int argc, char** argv ) {
 
 #ifdef LINUX
     struct termios termIOSettings;
+#endif
+#ifdef DEBUG
+    printf("main: pid = %d\n",getpid());
 #endif
 
 
@@ -1005,14 +1017,10 @@ int main( int argc, char** argv ) {
   (void) tcsetattr( pty, TCSANOW, &termIOSettings );
 #endif
 
-  signal( SIGCHLD, sigchld ); 
+  //signal( SIGCHLD, sigchld ); 
 
   /* fork and execute test program with arguments */
-  progname = argv[1];
-  //printf("argv[0] is %s\n", argv[0]); 
-  //printf("argv[1] is %s\n", argv[1]); 
-  //printf("argv[2] is %s\n", argv[2]); 
-  //printf("argv[3] is %s\n", argv[3]); 
+  progname = argv[1]; 
   execute( (char **) &argv[1] );
 
 #ifdef SOLARIS
@@ -1033,7 +1041,95 @@ int main( int argc, char** argv ) {
 
   doreader();
 
-  while( 1 );  /* XXX: INFINITE LOOP: Wait for SIGCHLD to make us exit */
+  //while( 1 );  /* XXX: INFINITE LOOP: Wait for SIGCHLD to make us exit */
+  int pid;
+  //union wait status;
+  int status;
+
+
+#ifdef DEBUG
+  fprintf( stderr, "ptyjig: got signal SIGCHLD\n" );
+#endif
+
+  /* Guarantee to return since a child is dead */
+  pid = wait3( (int*)&status, WUNTRACED, 0 );  
+#ifdef DEBUG
+    printf("sigchld wait3: pid = %d\n",pid);
+#endif
+
+  if( pid ) {
+#ifdef DEBUG
+    printf("ptyjig: pid = %d\n",pid);
+//    printf("ptyjig: status = %d %d %d %d %d\n",
+//            status.w_termsig,status.w_coredump,status.w_retcode,
+//            status.w_stopval,status.w_stopsig);
+
+    printf("ptyjig: status = %d %d %d %d %d\n",
+            WTERMSIG(status),WCOREDUMP(status),WEXITSTATUS(status),
+            WIFSTOPPED(status),WSTOPSIG(status));
+
+#endif
+
+    //if( status.w_stopsig == SIGTSTP ) {
+    int core = 0;
+    if( WSTOPSIG(status) == SIGTSTP ) {
+      kill( pid, SIGCONT );
+    }
+    else {
+      signal( SIGINT,   SIG_DFL );
+      signal( SIGQUIT,  SIG_DFL ); 
+      signal( SIGTERM,  SIG_DFL ); 
+      signal( SIGWINCH, SIG_DFL ); 
+      signal( SIGCHLD,  SIG_IGN );
+
+      done();
+
+      if( pid != execPID ) {
+#ifdef DEBUG
+        fprintf( stderr, "ptyjig: somebody killed my child\n" );
+        fprintf( stderr, "ptyjig: killing execPID = %d\n", execPID );
+#endif
+
+        kill( execPID, SIGKILL);          /* kill the exec too */
+        //kill( readerPID, status.w_termsig); /* use the same method to suicide */
+        kill( readerPID, WTERMSIG(status)); /* use the same method to suicide */
+      }
+
+
+      kill( execPID, SIGKILL ); /* Just to make sure it is killed */
+
+      if( pid != writerPID && writerPID != -1 ) {
+#ifdef DEBUG
+        printf( "ptyjig: killing writerPID = %d\n", writerPID );
+#endif
+        kill( writerPID, SIGKILL );
+      }
+
+      //if( status.w_termsig ) {
+      if( WTERMSIG(status) ) {
+        fprintf( stderr,"ptyjig: %s: %s%s\n",progname,
+                 //mesg[status.w_termsig].pname,
+                 mesg[WTERMSIG(status)].pname,
+                 //status.w_coredump ? " (core dumped)" : "" );
+                 WCOREDUMP(status) ? " (core dumped)" : "" );
+	if(WCOREDUMP(status)){
+	  core = 139;
+	}
+      }
+
+      /* If process terminates normally, return its retcode */
+      /* If abnormally, return termsig.  This is not exactly */
+      /* the same as csh, since the csh method is not too obvious */
+
+      //exit( status.w_termsig ? status.w_termsig : status.w_retcode );
+      printf("WTERMSIG(status) is %d, WTERMSIG(status) is %d, WEXITSTATUS(status) is %d\n", WTERMSIG(status), WTERMSIG(status), WEXITSTATUS(status));
+      //exit( WTERMSIG(status) ? WTERMSIG(status) : WEXITSTATUS(status) );
+      return core;
+    }
+
+    //exit(0);
+    return core;
+  }
 }
 
 
