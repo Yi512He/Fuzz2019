@@ -249,17 +249,12 @@ void sigchld(int sig) {
   if( pid ) {
 #ifdef DEBUG
     printf("ptyjig: pid = %d\n",pid);
-//    printf("ptyjig: status = %d %d %d %d %d\n",
-//            status.w_termsig,status.w_coredump,status.w_retcode,
-//            status.w_stopval,status.w_stopsig);
-
     printf("ptyjig: status = %d %d %d %d %d\n",
             WTERMSIG(status),WCOREDUMP(status),WEXITSTATUS(status),
             WIFSTOPPED(status),WSTOPSIG(status));
 
 #endif
 
-    //if( status.w_stopsig == SIGTSTP ) {
     if( WSTOPSIG(status) == SIGTSTP ) {
       kill( pid, SIGCONT );
     }
@@ -279,7 +274,6 @@ void sigchld(int sig) {
 #endif
 
         kill( execPID, SIGKILL);          /* kill the exec too */
-        //kill( readerPID, status.w_termsig); /* use the same method to suicide */
         kill( readerPID, WTERMSIG(status)); /* use the same method to suicide */
       }
 
@@ -293,12 +287,9 @@ void sigchld(int sig) {
         kill( writerPID, SIGKILL );
       }
 
-      //if( status.w_termsig ) {
       if( WTERMSIG(status) ) {
         fprintf( stderr,"ptyjig: %s: %s%s\n",progname,
-                 //mesg[status.w_termsig].pname,
                  mesg[WTERMSIG(status)].pname,
-                 //status.w_coredump ? " (core dumped)" : "" );
                  WCOREDUMP(status) ? " (core dumped)" : "" );
       }
 
@@ -306,7 +297,6 @@ void sigchld(int sig) {
       /* If abnormally, return termsig.  This is not exactly */
       /* the same as csh, since the csh method is not too obvious */
 
-      //exit( status.w_termsig ? status.w_termsig : status.w_retcode );
       exit( WTERMSIG(status) ? WTERMSIG(status) : WEXITSTATUS(status) );
     }
 
@@ -351,7 +341,6 @@ void clean() {
  */
 void sigwinch(int sig) {
   struct winsize ws;
-
 
   ioctl( 0,   TIOCGWINSZ, &ws );
   ioctl( pty, TIOCSWINSZ, &ws );
@@ -410,11 +399,8 @@ void clean_term(int sig) {
 
 
 
-
-
-
 /*
- * Opens a master pseudo-tty device on range ptyp0 ... ptyr9 
+ * Opens a master pseudo-tty device
  */
 void setup_pty() {
   char    c;
@@ -423,7 +409,6 @@ void setup_pty() {
   int     foundOne = FALSE;
   printf("enter setup_pty\n");
   int rc;
-
 
   pty = posix_openpt(O_RDWR);
   if (pty < 0) {
@@ -442,27 +427,14 @@ void setup_pty() {
     fprintf(stderr, "Error %d on unlockpt()\n", errno);
     exit(1);
   }
-
-
 }
 
 
-
 /*
- * Opens the slave device.  The device name is already in "ttyNameUsed" 
- * put in there by setup_pty(). 
+ * Opens the slave device. 
  */
 void setup_tty() {
-
-
-
-
-
-  /* Open modified "ttyNameUsed" as the control terminal */
-  // ttyNameUsed[5] = 't';
-  // tty = open( ttyNameUsed, O_RDWR );
   tty = open(ptsname(pty), O_RDWR);
-
   if( tty < 0 ) {
     perror( ttyNameUsed );
     exit( 1 );
@@ -548,7 +520,6 @@ void execute( char** cmd ) {
 }
  
 
-
 /* 
  *  Sleeps for 1 second, then KILLs PID execPID using SIGKILL
  */
@@ -563,7 +534,6 @@ void reader_done(int sig) {
 }
 
 
-
 /*
  * Sets boolean to false to stop writer
  */
@@ -571,7 +541,6 @@ void writer_done( int sig ) {
   writing = FALSE;
   ualarm(flagt, 0);
 }
-
 
 
 /*
@@ -585,7 +554,6 @@ void writer() {
   /*
    * Read from keyboard continuously and send it to "pty" 
    */
-  // read(0, &c, 1)表示从stdin读取
   while( read(0, &c, 1) == 1 ) { 
     if( write(pty, &c, 1) != 1 ) {
       break;
@@ -676,9 +644,7 @@ void reader() {
 
 
 
-/*
- * WHY?
- */
+
 void doreader() {
   reader();
 }
@@ -703,7 +669,6 @@ void dowriter() {
 #endif
      
 }
-
 
 
 /*
@@ -749,24 +714,10 @@ void usage() {
 }
 
 
-
 /*
  * Parse the args, start reader and writer, fork the process to be "piped" to 
  */
 int main( int argc, char** argv ) {
-  // #ifdef LINUX
-  // printf("linux\n");
-  // return 0;
-  // #endif
-  // #ifdef MACOS
-  // printf("macos\n");
-  // return 0;
-  // #endif
-  // #ifdef FREEBSD
-  // printf("freebsd\n");
-  // return 0;
-  // #endif
-
   int     num;
   int     cont;
   float   f;
@@ -898,8 +849,6 @@ int main( int argc, char** argv ) {
   }
 
 
-
-
   /* open an arbitrary pseudo-terminal pair  */
   setup_pty();
 
@@ -915,8 +864,6 @@ int main( int argc, char** argv ) {
   /* Set Attributes for Master to RAWed version of "termIOSettings" */
   (void) tcsetattr( pty, TCSANOW, &termIOSettings );
 #endif
-
-  //signal( SIGCHLD, sigchld ); 
 
   /* fork and execute test program with arguments */
   progname = argv[1]; 
@@ -937,11 +884,9 @@ int main( int argc, char** argv ) {
 
   doreader();
 
-  //while( 1 );  /* XXX: INFINITE LOOP: Wait for SIGCHLD to make us exit */
-  int pid;
-  //union wait status;
-  int status;
 
+  // process the return value of cmd
+  int pid, status;
 
 #ifdef DEBUG
   fprintf( stderr, "ptyjig: got signal SIGCHLD\n" );
@@ -956,17 +901,11 @@ int main( int argc, char** argv ) {
   if( pid ) {
 #ifdef DEBUG
     printf("ptyjig: pid = %d\n",pid);
-//    printf("ptyjig: status = %d %d %d %d %d\n",
-//            status.w_termsig,status.w_coredump,status.w_retcode,
-//            status.w_stopval,status.w_stopsig);
-
     printf("ptyjig: status = %d %d %d %d %d\n",
             WTERMSIG(status),WCOREDUMP(status),WEXITSTATUS(status),
             WIFSTOPPED(status),WSTOPSIG(status));
 
 #endif
-
-    //if( status.w_stopsig == SIGTSTP ) {
     int core = 0;
     if( WSTOPSIG(status) == SIGTSTP ) {
       kill( pid, SIGCONT );
@@ -987,7 +926,6 @@ int main( int argc, char** argv ) {
 #endif
 
         kill( execPID, SIGKILL);          /* kill the exec too */
-        //kill( readerPID, status.w_termsig); /* use the same method to suicide */
         kill( readerPID, WTERMSIG(status)); /* use the same method to suicide */
       }
 
@@ -1001,12 +939,9 @@ int main( int argc, char** argv ) {
         kill( writerPID, SIGKILL );
       }
 
-      //if( status.w_termsig ) {
       if( WTERMSIG(status) ) {
         fprintf( stderr,"ptyjig: %s: %s%s\n",progname,
-                 //mesg[status.w_termsig].pname,
                  mesg[WTERMSIG(status)].pname,
-                 //status.w_coredump ? " (core dumped)" : "" );
                  WCOREDUMP(status) ? " (core dumped)" : "" );
       	if(WTERMSIG(status) == 11){
       	  core = 139;
@@ -1016,14 +951,8 @@ int main( int argc, char** argv ) {
       /* If process terminates normally, return its retcode */
       /* If abnormally, return termsig.  This is not exactly */
       /* the same as csh, since the csh method is not too obvious */
-
-      //exit( status.w_termsig ? status.w_termsig : status.w_retcode );
-      printf("WTERMSIG(status) is %d, WTERMSIG(status) is %d, WEXITSTATUS(status) is %d, WCOREDUMP(status) is %d\n", WTERMSIG(status), WTERMSIG(status), WEXITSTATUS(status), WCOREDUMP(status));
-      //exit( WTERMSIG(status) ? WTERMSIG(status) : WEXITSTATUS(status) );
       return core;
     }
-
-    //exit(0);
     return core;
   }
 }
