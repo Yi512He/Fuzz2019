@@ -754,18 +754,18 @@ void usage() {
  * Parse the args, start reader and writer, fork the process to be "piped" to 
  */
 int main( int argc, char** argv ) {
-  #ifdef LINUX
-  printf("linux\n");
-  return 0;
-  #endif
-  #ifdef MACOS
-  printf("macos\n");
-  return 0;
-  #endif
-  #ifdef FREEBSD
-  printf("freebsd\n");
-  return 0;
-  #endif
+  // #ifdef LINUX
+  // printf("linux\n");
+  // return 0;
+  // #endif
+  // #ifdef MACOS
+  // printf("macos\n");
+  // return 0;
+  // #endif
+  // #ifdef FREEBSD
+  // printf("freebsd\n");
+  // return 0;
+  // #endif
 
   int     num;
   int     cont;
