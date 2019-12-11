@@ -3,7 +3,7 @@ import subprocess
 import random
 
 fnull = open(os.devnull, 'w')
-path = "./NewTest"
+path = "./NewTest_normal"
 
 if not os.path.exists(path):
   os.mkdir(path)
