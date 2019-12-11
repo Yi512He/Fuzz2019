@@ -1,3 +1,4 @@
+run.stdin gdb
 run.stdin as [-a -D -L -R -v -W -Z -w -x]
 run.stdin bc [-l -w -s -q]
 run.stdin cat [-a -b -e -n -s -t -T -u -v]
@@ -62,7 +63,8 @@ run.file strip [-F -s -g -S -d -M -p -D -U -w -x]
 run.file sum [-r -s]
 run.file tail [-q --retry -v -z]
 run.file tbl [-C]
-#run.file troff []
+run.file troff [-a -b -c -C -E -U -z]
+run.file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
 run.file tsort
 run.file ul [-i]
 run.file uniq [-c -d -i -u -z]
@@ -78,3 +80,5 @@ run.stdin csh
 run.double diff [-q -s -c -u -e -n -y -W -p -F -t -T]
 run.double join [-e -i --check-order]
 run.double comm [-1 -2 -3 -z --check-order --total]
+#run.pty vim
+#run.pty htop

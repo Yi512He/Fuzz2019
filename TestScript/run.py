@@ -238,7 +238,58 @@ def run_double(item, output, test_list, fnull, timeout):
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
+def run_pty(item, output, test_list, fnull, timeout):
+  # check if there is suffix
+  #idx = item.find("[")
 
+  # idx >= 0 when match "[" successfully
+  #if idx >= 0:
+  #  suffix = item[idx + 1: -1]
+  #  item = item[0: idx]
+
+  cmd_type = item.split(" ", 1)[0]
+  cmd = item.split(" ", 1)[1]
+  hang_count = 0
+  retcode = 0
+
+  for test_case in test_list:
+    # if there are hang_num successive hangs, break
+    if hang_count >= hang_num:
+      break
+
+    try:
+      final_cmd = "./pty -d 0.001 -t 10 " + cmd
+      # if options exist, append options to the final_cmd
+      #if idx >= 0:
+      #  options_random = random_subset(options)
+      #  final_cmd = final_cmd + " " + options_random
+      subprocess.call("cat %s end_vim > tmp" % test_case, shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+      # remove all ^z in tmp
+      fr = open("tmp", "rb")
+      s = fr.read()
+      fr.close()
+      s = s.replace(b"\x1a", b"")
+      fw = open("tmp", "wb")
+      fw.write(s)
+      fw.close()
+
+      final_cmd = final_cmd + " < " + "tmp"
+      print(final_cmd)
+      retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
+    except(subprocess.TimeoutExpired):
+      hang_count = hang_count + 1
+      output.write("%s %s %s hang\n" % (cmd_type, final_cmd, test_case))
+
+    except(FileNotFoundError):
+      output.write("%s %s not found\n" % (cmd_type, final_cmd))
+      break
+
+    else:
+      hang_count = 0
+      # 139 means segment fault
+      if retcode == 139:
+        output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
+        subprocess.call("rm tmp" % file_tmp, shell=True)
 
 
 
@@ -282,6 +333,19 @@ with open(all_utilities_file, "r") as all_utilities_reader:
       output_file = open(file_name, "w")
       output_file.write("start: %s\n" % item)
       run_file(item, output_file, test_list, fnull, timeout)
+      output_file.write("finished\n")
+      output_file.close()
+    
+    elif cmd_type == "run.pty":
+      cmd = item.split(" ", 1)[1]
+      file_name = os.path.join(output_dir, "%s.%s" % (cmd_type, cmd.replace("/", "-")))
+      if os.path.exists(file_name) and os.stat(file_name).st_size != 0:
+        with open(file_name, "r") as f:
+          if f.readlines()[-1] == "finished\n":
+            continue
+      output_file = open(file_name, "w")
+      output_file.write("start: %s\n" % item)
+      run_pty(item, output_file, test_list, fnull, timeout)
       output_file.write("finished\n")
       output_file.close()
 

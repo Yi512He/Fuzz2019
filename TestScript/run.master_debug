@@ -1,5 +1,0 @@
-run.stdin cat [-a -b -e -n -s -t -T -u -v]
-run.file sort [-b -d -f -g -i -M -h -n -R -r -V]
-run.file split [-a -b -C -d -x -e -l -n -t -u]
-run.cp t.c cc  [-c -S -E]
-run.double diff [-q -s -c -u -e -n -y -W -p -F -t -T]

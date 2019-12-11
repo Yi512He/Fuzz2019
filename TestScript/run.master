@@ -1,3 +1,4 @@
+run.stdin gdb
 run.stdin as 
 run.stdin bc 
 run.stdin cat 
