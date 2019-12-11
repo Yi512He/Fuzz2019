@@ -80,5 +80,5 @@ run.stdin csh
 run.double diff [-q -s -c -u -e -n -y -W -p -F -t -T]
 run.double join [-e -i --check-order]
 run.double comm [-1 -2 -3 -z --check-order --total]
-#run.pty vim
-#run.pty htop
+run.pty vim
+run.pty htop

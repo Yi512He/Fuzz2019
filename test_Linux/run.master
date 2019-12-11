@@ -79,3 +79,5 @@ run.stdin csh
 run.double diff 
 run.double join 
 run.double comm 
+run.pty vim
+run.pty htop
