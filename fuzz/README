@@ -1,6 +1,10 @@
 In this directory:
 	fuzz.c: 
 		modified random string generater
+		Some samples of how to run fuzz:
+			./fuzz 100 -0	
+			./fuzz 100 -0 -l	
+			./fuzz 1000 -a -o data
 	generate_small.py:
 		python script to generate small files(200 small files with 0-1e3 characters or 1-100 lines with 0-50 characters per line)
 	generate_normal.py:
