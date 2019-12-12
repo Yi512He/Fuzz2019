@@ -1,0 +1,29 @@
+In this directory:
+	./fuzz/
+		updated fuzz.c and python script to generate test data
+	./pty/
+		updated cross-platform ptyjig and some end of interactive tools
+	./test_Linux/
+		name and option pools of each cmd to be tested on Linux
+	./test_MacOS/
+		name and option pools of each cmd to be tested on MacOS
+	./test_FreeBSD/
+		name and option pools of each cmd to be tested on FreeBSD
+	./Xv6/
+		updated fuzz tools on Xv6
+
+	run.py
+		automatically test all utilities listed in a file(see ./test_Linux/ or ./test_MacOS/ or ./test_FreeBSD/)
+		One can edit run.py to specify all the settings
+		The default setting is:
+			test on small test cases
+			timeout after 300 seconds
+			utility names and options pools are from "./test_Linux/run.master_options"
+			test result of each utility will be saved into "./log", each utility corresponds to a result file
+			the script will combine result files into single file named "all"
+		
+
+To test, run: 
+	make
+	python3 run.py	
+

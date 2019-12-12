@@ -6,7 +6,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_huge"
+test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_small"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -19,10 +19,10 @@ timeout = 300
 hang_num = 2
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./run.master_options"
+all_utilities_file = "./test_Linux/run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./output_log_options_huge_timeout"
+output_dir = "./log/"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -258,12 +258,12 @@ def run_pty(item, output, test_list, fnull, timeout):
       break
 
     try:
-      final_cmd = "./pty -d 0.001 -t 10 " + cmd
+      final_cmd = "./pty/pty -d 0.001 -t 10 " + cmd
       # if options exist, append options to the final_cmd
       #if idx >= 0:
       #  options_random = random_subset(options)
       #  final_cmd = final_cmd + " " + options_random
-      subprocess.call("cat %s end_vim > tmp" % test_case, shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+      subprocess.call("cat %s ./pty/end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
       # remove all ^z in tmp
       fr = open("tmp", "rb")
       s = fr.read()
