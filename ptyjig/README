@@ -1,0 +1,15 @@
+In this directory:
+	ptyjig_cross_platform.c: 
+		modified ptyjig
+	end/:
+		end of different interactive utilities, such as vim, ftp, csh, htop and so on
+	t1:
+		a small test case
+	test_case_for_vim:
+		a sample test case for vim. To test vim, just run:
+		./pty -d 0.05 vim < test_case_for_vim
+
+		One can generate a test case for other interactive utilities by append end file to t1:
+			cat t1 ./end/end_htop > test_case_for_htop
+			./pty -d 0.05 htop < test_case_for_htop
+		run.py will automatically concatenate the test case and the specific end before testing a utility
