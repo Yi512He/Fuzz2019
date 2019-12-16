@@ -12,16 +12,6 @@
 #define BACK  5
 
 #define MAXARGS 10
-#define bufSize 100
-#define strSize 50
-#define intSize 3
-#define testNum 10
-#define offset 48
-#define decimal 10
-#define charRange 128
-#define intRange 100
-
-static unsigned long next = 1;
 
 struct cmd {
   int type;
@@ -62,20 +52,6 @@ struct backcmd {
 int fork1(void);  // Fork but panics on failure.
 void panic(char*);
 struct cmd *parsecmd(char*);
-void testcmd(char*, char*, int);
-void ranStr(int, char*);
-void ranInt(char*);
-void testFuzzBasic(char*);
-void testFuzzStr(char*, char*);
-void testFuzzInt(char*, char*);
-void testFuzz(char*);
-
-int 
-rand()
-{
-  next = next * 1103515245 + 12345;
-  return((uint)(next/65536) % 32768);
-}
 
 // Execute cmd.  Never returns.
 void
@@ -99,7 +75,6 @@ runcmd(struct cmd *cmd)
     ecmd = (struct execcmd*)cmd;
     if(ecmd->argv[0] == 0)
       exit();
-    close(1);
     exec(ecmd->argv[0], ecmd->argv);
     printf(2, "exec %s failed\n", ecmd->argv[0]);
     break;
@@ -156,191 +131,45 @@ runcmd(struct cmd *cmd)
 }
 
 int
-main(int argc, char** argv)
+getcmd(char *buf, int nbuf)
 {
-  static char buf[bufSize];
- 
-  testFuzz(buf);
+  printf(2, "$ ");
+  memset(buf, 0, nbuf);
+  gets(buf, nbuf);
+  if(buf[0] == 0) // EOF
+    return -1;
+  return 0;
+}
 
+int
+main(void)
+{
+  static char buf[100];
+  int fd;
+
+  // Ensure that three file descriptors are open.
+  while((fd = open("console", O_RDWR)) >= 0){
+    if(fd >= 3){
+      close(fd);
+      break;
+    }
+  }
+
+  // Read and run input commands.
+  while(getcmd(buf, sizeof(buf)) >= 0){
+    if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
+      // Chdir must be called by the parent, not the child.
+      buf[strlen(buf)-1] = 0;  // chop \n
+      if(chdir(buf+3) < 0)
+        printf(2, "cannot cd %s\n", buf+3);
+      continue;
+    }
+    if(fork1() == 0)
+      runcmd(parsecmd(buf));
+    wait();
+  }
   exit();
 }
-
-void
-testcmd(char *buf, char *fuzz, int flag)
-{
-  if(flag){
-    strcpy(buf, fuzz);
-  }
-  printf(1, "%s\n", buf);
-    
-  if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
-    // Chdir must be called by the parent, not the child.
-    buf[strlen(buf)-1] = 0;  // chop \n
-    if(chdir(buf+3) < 0)
-      printf(2, "cannot cd %s\n", buf+3);
-    return;
-  }
-  if(fork1() == 0)
-    runcmd(parsecmd(buf));
-  wait();
-  printf(1, "\n");
-
-  return;
-}
-
-void
-ranStr(int len, char* strbuf)
-{
-  for(int i = 0; i < len - 1; i++){
-    strbuf[i] = (char)(rand() % charRange);
-  }
-
-  strbuf[len] = 0;
-
-  return;
-}
-
-void 
-testFuzzStr(char *buf, char *testCmd)
-{
-  char strbuf[strSize];
-  ranStr(rand() % strSize, strbuf);
-  memset(buf, 0, bufSize);
-  strcpy(buf, testCmd);
-  strcpy(buf + strlen(testCmd), strbuf);
-  testcmd(buf, "", 0);
-
-  return;
-}
-
-void 
-ranInt(char* intBuf)
-{
-  memset(intBuf, 0, intSize);
-  int num = rand() % intRange;
-
-  // one digit
-  if(num % decimal == num){
-    intBuf[0] = (char)(num + offset);
-  }
-  else{// two digits
-    intBuf[1] = (char)(num % decimal + offset);
-    intBuf[0] = (char)(num / decimal + offset);
-  }
-}
-
-void 
-testFuzzInt(char *buf, char *testCmd)
-{
-  char intBuf[intSize];
-  ranInt(intBuf);
-  testcmd(buf, 0, bufSize);
-  strcpy(buf, testCmd);
-  strcpy(buf + strlen(testCmd), intBuf);
-  testcmd(buf, "", 0);
-    
-  return;
-}
-
-void 
-testFuzz(char* buf)
-{
-  testFuzzBasic(buf);
-
-  printf(1, "==============Testing echo===============\n"); 
-  for(int i = 0; i < testNum; i++){  
-      testFuzzStr(buf, "echo ");
-  }
-  
-  printf(1, "==============Testing mkdir===============\n"); 
-  for(int i = 0; i < testNum; i++){
-      testFuzzStr(buf, "mkdir ");
-  }
-
-
-  printf(1, "==============Testing kill===============\n"); 
-  for(int i = 0; i < testNum; i++){
-      testFuzzInt(buf, "kill ");
-  }
- 
-
-}
-
-void 
-testFuzzBasic(char *buf)
-{
-  // testing wc
-  printf(1, "==============Testing wc===============\n"); 
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 32 -o t0 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -p -o t1 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t2 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -l -o t3 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t4 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 30 -e \"btvxrn\" -o t5 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 20 -0 -l -o t6 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -o t7 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -0 -o t8 | wc", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 25 -l -s 96 -o t9 | wc", 1);
-
-  // testing cat
-  printf(1, "==============Testing cat===============\n"); 
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 32 -o t10 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -p -o t11 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t12 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -l -o t13 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t14 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 30 -e \"btvxrn\" -o t15 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 20 -0 -l -o t16 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -o t17 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -0 -o t18 | cat", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 25 -l -s 96 -o t19 | cat", 1);
-
-  // testing grep
-  printf(1, "==============Testing grep===============\n"); 
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 32 -o t20 | grep e", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -p -o t21 | grep a", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t22 | grep st", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -l -o t23 | grep i", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 100 -o t24 | grep a", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 30 -e \"btvxrn\" -o t25 | grep e", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 20 -0 -l -o t26 | grep st", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -o t27 | grep i", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 255 -0 -o t28 | grep s", 1);
-  memset(buf, 0, bufSize);
-  testcmd(buf, "fuzz 25 -l -s 96 -o t29 | grep t", 1);
-
-  return;
-}
-
 
 void
 panic(char *s)
