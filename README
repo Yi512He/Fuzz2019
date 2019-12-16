@@ -29,7 +29,11 @@ To test basic utilities on Linux, run:
 To test utilities using ptyjig on Linux, run: 
         ./sampleTestPty.sh
 
-To test utilities on Xv6 platform, please do as follows:  
+To test utilities on Xv6 platform, run:  
+	./testXv6.sh
+
+
+Alternatively, you can do as follows:  
 
   # Go to Xv6 directory
   cd test_Xv6 
@@ -48,4 +52,5 @@ To test utilities on Xv6 platform, please do as follows:
 
   # To clean up
   make clean
+
 

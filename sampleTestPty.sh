@@ -14,3 +14,5 @@ cat t1 ./end/end_htop > test_case_for_htop
 echo ./pty -d 0.05 htop < test_case_for_htop
 ./pty -d 0.05 htop < test_case_for_htop
 
+# clear the window
+clear
