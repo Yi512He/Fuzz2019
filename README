@@ -9,7 +9,7 @@ In this directory:
 		name and option pools of each cmd to be tested on MacOS
 	./test_FreeBSD/
 		name and option pools of each cmd to be tested on FreeBSD
-	./Xv6/
+	./test_Xv6/
 		updated fuzz tools on Xv6
 
 	run.py
@@ -23,7 +23,29 @@ In this directory:
 			the script will combine result files into single file named "all"
 		
 
-To test, run: 
-	make
-	python3 run.py	
+To test basic utilities on Linux, run: 
+	./basicTest.sh	
+
+To test utilities using ptyjig on Linux, run: 
+        ./sampleTestPty.sh
+
+To test utilities on Xv6 platform, please do as follows:  
+
+  # Go to Xv6 directory
+  cd test_Xv6 
+
+  # To run Xv6
+  make qemu-nox
+
+  # To run fuzz test in Xv6 environment
+  testScript
+
+  # To list generated testcases
+  ls
+
+  # To exit Xv6 environment
+  Ctrl-A X
+
+  # To clean up
+  make clean
 
