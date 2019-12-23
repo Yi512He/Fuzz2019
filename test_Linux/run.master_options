@@ -12,7 +12,7 @@ run.file colcrt - [-2]
 run.stdin colrm 
 run.file colrm 2 4 
 run.two_files comm [-1 -2 -3 -z --check-order --total]
-run.file cpp [-D -U -I -M]
+run.file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
 run.stdin csh
 run.pty csh
 run.cp t.c ctags [-a -B -I --members -Q -R -u -v -x]

@@ -22,7 +22,7 @@ hang_num = 2
 all_utilities_file = "./test_Linux/run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./log/"
+output_dir = "./results/small"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -90,8 +90,8 @@ def run_file(item, output, test_list, fnull, timeout):
 
     else:
       hang_count = 0
-      # 139 means segment fault
-      if retcode == 139:
+      # check return value, record exit code with special meaning
+      if retcode >= 126:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
@@ -138,8 +138,8 @@ def run_cp(item, output, test_list, fnull, timeout):
 
     else:
       hang_count = 0
-      # 139 means segment fault
-      if retcode == 139:
+      # check return value, record exit code with special meaning
+      if retcode >= 126:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
         subprocess.call("rm %s" % file_tmp, shell=True)
 
@@ -185,8 +185,8 @@ def run_stdin(item, output, test_list, fnull, timeout):
 
     else:
       hang_count = 0
-      # 139 means segment fault
-      if retcode == 139:
+      # check return value, record exit code with special meaning
+      if retcode >= 126:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 # run cmds with two input files
@@ -233,8 +233,8 @@ def run_double(item, output, test_list, fnull, timeout):
 
     else:
       hang_count = 0
-      # 139 means segment fault
-      if retcode == 139:
+      # check return value, record exit code with special meaning
+      if retcode >= 126:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
@@ -286,8 +286,8 @@ def run_pty(item, output, test_list, fnull, timeout):
 
     else:
       hang_count = 0
-      # 139 means segment fault
-      if retcode == 139:
+      # check return value, record exit code with special meaning
+      if retcode >= 126:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
         subprocess.call("rm tmp" % file_tmp, shell=True)
 
