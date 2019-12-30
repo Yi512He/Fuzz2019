@@ -14,7 +14,7 @@ run.file colrm 2 4
 run.two_files comm [-1 -2 -3 -z --check-order --total]
 run.file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -fdebug-cpp]
 run.stdin csh
-run.pty csh
+#run.pty csh
 run.cp t.c ctags [-a -B -I --members -Q -R -u -v -x]
 run.stdin dc 
 run.two_files diff [-q -s -c -u -e -n -y -W -p -F -t -T]
@@ -35,7 +35,7 @@ run.stdin gdb [-write -nh -nx -quiet -batch -fullname]
 run.file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
 run.stdin head [-q -v -z]
 run.file head [-q -v -z]
-run.pty htop
+#run.pty htop
 run.two_files join [-e -i --check-order]
 run.stdin latex 
 run.stdin lex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
@@ -57,8 +57,8 @@ run.two_files sdiff [-i -E -Z -b -W -B -a -l -s -t -d -H]
 run.file sed 's/a/b/' [-n --follow-symlinks --posix -s -u -z]
 run.stdin sh [-a -C -e -f -n -u -v -x -I -m -s -V -E -b -p]
 run.stdin soelim [-C -r -t]
-run.file split [-a -b -C -d -x -e -l -n -t -u]
-run.cp t split -10 [-a -b -C -d -x -e -l -n -t -u]
+run.file split [-d -x -e -l -u]
+run.cp t split -10 [-d -x -e -l -u]
 run.stdin sort [-b -d -f -g -i -M -h -r]
 run.file sort [-b -d -f -g -i -M -h -r]
 run.stdin spell [-l -n -o -v]
@@ -72,8 +72,8 @@ run.file tail [-q --retry -v -z]
 run.stdin tbl [-C]
 run.file tbl [-C]
 run.stdin tee /tmp/tee.tmp [-a -i -p]
-run.stdin telnet [-4 -6 -8 -E -L -a -d -r]
-run.pty telnet
+#run.stdin telnet [-4 -6 -8 -E -L -a -d -r]
+#run.pty telnet
 run.stdin tex [-file-line-error -no-file-line-error -file-line-error-style -ini -ipc -mltex -recorder -shell-escape -no-shell-escape -src-specials]
 run.stdin tr a b 
 run.file troff [-a -b -c -C -E -U -z]
@@ -83,10 +83,10 @@ run.stdin ul [-i]
 run.file ul [-i]
 run.stdin uniq [-c -d -i -u -z]
 run.file uniq [-c -d -i -u -z]
-run.pty vim
+#run.pty vim
 run.stdin wc [-c -m -l -w]
 run.file wc [-c -m -l -w]
 run.stdin xargs [-0 -r --show-limits -r]
 run.file yacc
 run.file zic [-v -s]
-run.pty zsh
+#run.pty zsh
