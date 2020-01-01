@@ -19,7 +19,7 @@ timeout = 300
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_FreeBSD/run.small"
+all_utilities_file = "./test_FreeBSD/run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
 output_dir = "./results/small"
@@ -186,7 +186,6 @@ def run_stdin(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      print(retcode)
       if retcode >= 126 or retcode < 0:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
