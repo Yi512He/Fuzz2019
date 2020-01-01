@@ -11,8 +11,6 @@ run.stdin col [-b -f -h -p -x]
 run.stdin colcrt [- -2]
 run.stdin colrm
 run.two_files comm
-run.file compress [-c -f -v]
-run.cp t compress [-c -f -v]
 run.stdin cpp [-E -S -c -ansi -ObjC -fblocks -g -ftrapv]
 run.stdin csh [-b -c -d -e -f -F -i -l -m -n -q -s -t]
 run.cp t.c ctags [-B -F -T -a -d -f -u -v -w -x]
@@ -20,7 +18,7 @@ run.file cut [-n -s -w] -c 10
 run.stdin dc [-x]
 run.file dd 
 run.two_files diff [-i -E -w -B -a -p -q -e --normal --left-column]
-run.stdin ed [-s -x]
+run.stdin ed [-s]
 run.stdin eqn [-C -N -r -R]
 run.stdin ex [-F -R -r -S -s]
 run.stdin expand [-a]
@@ -43,7 +41,7 @@ run.file a look [-d -f]
 run.stdin m4 [-g -P -s]
 run.file mail -s "subject" 15927119728@163.com < 
 run.file make [-e -i -k -n -N -q -r -s -t -W -w -X] -f
-run.file md5 [-p -q -r -t -x]
+run.file md5 [-q -r -t]
 run.stdin mesg 
 run.stdin more
 run.stdin neqn 
@@ -57,7 +55,7 @@ run.stdin refer [-b -e -n -C -P -S -k -l -B -R]
 run.stdin rev 
 run.two_files sdiff [-l -s -a -b -d -i -t]
 run.stdin sed [-E -a -l -n -r -u]
-run.file sh [-c -s]
+#run.file sh [-c -s]
 run.stdin soelim [-C]
 run.file sort [-c -m -u -s -b -d -f -g -h -i]
 run.stdin sort [-m -s]
@@ -78,8 +76,10 @@ run.stdin uniq [-c -d -u -i]
 run.stdin units [-e -q -U -t -v]
 run.stdin vgrind - [-W -f -l -n -t -x]
 run.stdin wc [-L -c -l -m -w]
-run.stdin xargs [-0 -p -r -t -x]
+run.stdin xargs [-0 -r -x]
 run.stdin xargs test
 run.file yacc [-B -d -g -i -L -P -r -s -t -v]
 run.file zic [-D -v -s]
-run.stdin zsh 
+#run.stdin zsh 
+run.file compress [-c -v]
+run.cp t compress [-c -f -v]

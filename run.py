@@ -6,7 +6,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "/u/m/e/mengxiao_zhang/public/NewTest_small"
+test_dir = "/NewTest_small"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -16,10 +16,10 @@ timeout = 300
 
 # if there are hang_num successive hangs, no need to continue the testing on the current cmd
 # check the way you use the cmd, or increase the timeout and retest, or consider the results as hangs
-hang_num = 2
+hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_Linux/run.master_options"
+all_utilities_file = "./test_FreeBSD/run.small"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
 output_dir = "./results/small"
@@ -91,7 +91,7 @@ def run_file(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      if retcode >= 126:
+      if retcode >= 126 or retcode < 0:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
@@ -139,7 +139,7 @@ def run_cp(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      if retcode >= 126:
+      if retcode >= 126 or retcode < 0:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
         subprocess.call("rm %s" % file_tmp, shell=True)
 
@@ -186,7 +186,8 @@ def run_stdin(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      if retcode >= 126:
+      print(retcode)
+      if retcode >= 126 or retcode < 0:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 # run cmds with two input files
@@ -234,7 +235,7 @@ def run_double(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      if retcode >= 126:
+      if retcode >= 126 or retcode < 0:
         output.write("%s %s error: %d\n" % (cmd_type, final_cmd, retcode))
 
 
@@ -287,7 +288,7 @@ def run_pty(item, output, test_list, fnull, timeout):
     else:
       hang_count = 0
       # check return value, record exit code with special meaning
-      if retcode >= 126:
+      if retcode >= 126 or retcode < 0:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
         subprocess.call("rm tmp" % file_tmp, shell=True)
 
