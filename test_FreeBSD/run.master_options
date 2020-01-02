@@ -37,7 +37,7 @@ run.stdin head
 run.stdin indent [-bacc -bad -bc -bl -st]
 run.two_files join
 run.stdin lex
-run.file a look [-d -f]
+run.file look a [-d -f]
 run.stdin m4 [-g -P -s]
 run.file mail -s "subject" 15927119728@163.com < 
 run.file make [-e -i -k -n -N -q -r -s -t -W -w -X] -f
