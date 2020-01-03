@@ -19,10 +19,10 @@ timeout = 300
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_FreeBSD/run.master_options"
+all_utilities_file = "./test_FreeBSD/run.pty"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./results/small"
+output_dir = "./results/small_pty"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -258,12 +258,12 @@ def run_pty(item, output, test_list, fnull, timeout):
       break
 
     try:
-      final_cmd = "./pty/pty -d 0.001 -t 10 " + cmd
+      final_cmd = "./ptyjig/pty -d 0.001 " + cmd
       # if options exist, append options to the final_cmd
       #if idx >= 0:
       #  options_random = random_subset(options)
       #  final_cmd = final_cmd + " " + options_random
-      subprocess.call("cat %s ./pty/end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
+      subprocess.call("cat %s ./ptyjig/end/end_%s > tmp" % (test_case, cmd), shell=True, stdout=fnull, stderr=subprocess.STDOUT)
       # remove all ^z in tmp
       fr = open("tmp", "rb")
       s = fr.read()
@@ -289,7 +289,7 @@ def run_pty(item, output, test_list, fnull, timeout):
       # check return value, record exit code with special meaning
       if retcode >= 126 or retcode < 0:
         output.write("%s %s %s error: %d\n" % (cmd_type, final_cmd, test_case, retcode))
-        subprocess.call("rm tmp" % file_tmp, shell=True)
+        subprocess.call("rm tmp", shell=True)
 
 
 
