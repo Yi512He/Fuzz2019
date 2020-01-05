@@ -3,6 +3,7 @@ run.file awk '{print}'
 run.stdin bc [-c -l]
 run.file bison [-u -y -t -l -k]
 run.cp - calendar calendar
+run.file calendar [-a -d] -f
 run.stdin cat [-b -e -l -n -s -t -u -v] 
 run.cp t.c cc [-E -S -c -ansi -ObjC -fblocks -g -ftrapv]
 run.file checknr [-a -c -f -s]
@@ -33,13 +34,14 @@ run.stdin gdb [-n -q -batch -f -b]
 run.stdin grep a [-a -b -c -F -P -G -H -h -I -i -L -l]
 run.stdin grn [-C]
 run.file groff [-e -l -L -N -p -R -s -S -t -U -V -X -z -Z]
+run.file grotty [-b -B -c -d -f -h -i -o -r -u -U]
 run.stdin head
 run.stdin indent [-bacc -bad -bc -bl -st]
 run.two_files join
 run.stdin lex
 run.file look a [-d -f]
 run.stdin m4 [-g -P -s]
-run.file mail -s "subject" 15927119728@163.com < 
+#run.file mail -s "subject" 15927119728@163.com < 
 run.file make [-e -i -k -n -N -q -r -s -t -W -w -X] -f
 run.file md5 [-q -r -t]
 run.stdin mesg 
