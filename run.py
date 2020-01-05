@@ -269,12 +269,18 @@ def run_pty(item, output, test_list, fnull, timeout):
       s = fr.read()
       fr.close()
       s = s.replace(b"\x1a", b"")
+
+      # Z or z will suspend telnet 
+      if(cmd == "telnet"):
+          s = s.replace(b"Z", b"")
+          s = s.replace(b"z", b"")
       fw = open("tmp", "wb")
       fw.write(s)
       fw.close()
 
       final_cmd = final_cmd + " < " + "tmp"
       print(final_cmd)
+      print(test_case)
       retcode = subprocess.call(final_cmd, shell=True, stdout=fnull, stderr=subprocess.STDOUT, timeout=timeout)
     except(subprocess.TimeoutExpired):
       hang_count = hang_count + 1
