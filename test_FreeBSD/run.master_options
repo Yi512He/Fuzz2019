@@ -34,7 +34,6 @@ run.stdin gdb [-n -q -batch -f -b]
 run.stdin grep a [-a -b -c -F -P -G -H -h -I -i -L -l]
 run.stdin grn [-C]
 run.file groff [-e -l -L -N -p -R -s -S -t -U -V -X -z -Z]
-run.file grotty [-b -B -c -d -f -h -i -o -r -u -U]
 run.stdin head
 run.stdin indent [-bacc -bad -bc -bl -st]
 run.two_files join
