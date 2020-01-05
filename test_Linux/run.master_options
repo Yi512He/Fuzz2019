@@ -3,7 +3,7 @@ run.file awk '{print}'
 run.file awk '/a/ {print}'
 run.stdin bc [-l -w -s -q]
 run.file bison [-y -t --locations -l -k -v]
-run.cp - calendar calendar
+run.file calendar [-a -b -w] -f 
 run.stdin cat [-a -b -e -n -s -t -T -u -v]
 run.cp t.c cc [-c -S -E]
 run.stdin col [-b -f -h -p -x]
@@ -16,12 +16,16 @@ run.file cpp [-undef -pthread -M -fpreprocessed -fdirectives-only -C -P -remap -
 run.stdin csh
 #run.pty csh
 run.cp t.c ctags [-a -B -I --members -Q -R -u -v -x]
+run.file cut [--complement -s -z]
 run.stdin dc 
+run.stdin dd
 run.two_files diff [-q -s -c -u -e -n -y -W -p -F -t -T]
+run.file ed [-G -l -r -s -v]
 run.file eqn [-C -N -r -R]
 run.stdin ex 
 run.stdin expand [-i]
 run.file expand [-i]
+run.stdin expr
 run.cp t.f f77 [-c -g -W -dD -dI]
 run.stdin find [-P -L -H -D]
 run.stdin flex [-Ca -Ce -Cf -Cm -Cr -f -F -Cem -d -b -p -s -T -w -v --hex -7 -8 -B -i -l]
@@ -29,9 +33,9 @@ run.file fmt [-c -s -t -u]
 run.file fold [-b -s]
 run.stdin ftp [-4 -6 -p -i -n -e -g -v -d]
 run.file gcc [-c -S -E -g]
+run.stdin gdb [-write -nh -nx -quiet -batch -fullname]
 run.stdin grep a [-E -i -v -w -x -y]
 run.file grep -c "ab" [-E -i -v -w -x -y]
-run.stdin gdb [-write -nh -nx -quiet -batch -fullname]
 run.file groff [-e -k -l -N -p  -s -S -t -U -z -Z -a -b -c -C -E]
 run.stdin head [-q -v -z]
 run.file head [-q -v -z]
@@ -57,11 +61,11 @@ run.two_files sdiff [-i -E -Z -b -W -B -a -l -s -t -d -H]
 run.file sed 's/a/b/' [-n --follow-symlinks --posix -s -u -z]
 run.stdin sh [-a -C -e -f -n -u -v -x -I -m -s -V -E -b -p]
 run.stdin soelim [-C -r -t]
-run.file split [-d -x -e -l -u]
-run.cp t split -10 [-d -x -e -l -u]
 run.stdin sort [-b -d -f -g -i -M -h -r]
 run.file sort [-b -d -f -g -i -M -h -r]
 run.stdin spell [-l -n -o -v]
+run.file split [-d -x -e -l -u]
+run.cp t split -10 [-d -x -e -l -u]
 run.stdin strings [-a -d -f -w]
 run.file strings [-a -d -f -w]
 run.file strip [-F -s -g -S -d -M -p -D -U -w -x]
@@ -89,4 +93,3 @@ run.file wc [-c -m -l -w]
 run.stdin xargs [-0 -r --show-limits -r]
 run.file yacc
 run.file zic [-v -s]
-#run.pty zsh
