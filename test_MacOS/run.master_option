@@ -7,23 +7,23 @@ run.file calendar -f
 run.file cat [-b -e -n -s -t -u -v]
 run.cp t.c cc [-E -fsyntax-only -S -c -ansi -trigraphs -ffreestanding -fno-builtin -fmath-errno -fmath-errno -fpascal-strings -fms-extensions -fborland-extensions -fwritable-strings -flax-vector-conversions -fblocks -fobjc-nonfragile-abi -g -fstandalone-debug -fno-standalone-debug -fexceptions -ftrapv -fcommon -flto -save-temps -save-stats -integrated-as -time -ftime-report -nostdinc]
 run.file checknr [-a -c -f -s]  
-run.double cmp
+run.double cmp [-b -l -s]
 run.stdin col [-b -f -h -p -x]
 run.file colcrt [- -2]
 run.stdin colrm 6
 run.double comm [-1 -2 -3 -i]
 run.file compress [-c -f]
-run.file cpp 
+run.file cpp [-b -c -d -e -f -F]
 run.stdin csh
 run.file ctags [-B -F -a -d -t -u -w -x]
-run.file cut -b 10
+run.file cut [-n -s] -b 10
 run.stdin dc 
 run.stdin dd
-run.double diff
-run.stdin ed
+run.double diff [-i -E -b -a -p]
+run.stdin ed [-s -x]
 run.stdin eqn [-r -C -N -R]
 run.stdin ex
-run.stdin expand
+run.stdin expand [-a]
 run.stdin expr
 run.file find [-H -E -X -d -s -x]
 run.file fmt [-c -m -n -p -s]
@@ -32,34 +32,34 @@ run.file gcc
 run.stdin lldb [-d -e -x -w]
 run.file grep "e" -f
 run.stdin grn [-C -s]
-run.file groff
+run.file groff [-e -l -N -p]
 run.file head
-run.file indent -st
+run.file indent [-bacc -br -lp -st -troff]
 run.double join
+run.file lex [-Ca -Ce -Cf -CF -Cm -Cr -f -F -b -d -p -s -T -w -v -7 -8 -l -X]
 run.file look a [-d -f]
-run.stdin m4
-run.file make -f
+run.stdin m4 [-E -P -Q -s -G]
+run.file make [-B -d -e -i -k -L -n -p -q -r -R -s -S] -f
 run.stdin md5 [-p -q -r -t -x]
 run.file mdls
-run.stdin mesg
-run.file mig
+run.file mig [-v -L -K -s -MD]
 run.stdin neqn
 run.file nm [-A]
 run.file nroff [-C -c -p -S -t -U]
 run.file pic [-n -C -S -U]
-run.file pr
+run.file pr [-a -d -F -f -m -p -r -t]
 run.file refer [-b -e -n -C -P -R -S]
 run.file rev
-run.double sdiff
-run.stdin sed
+run.double sdiff [-i -E -b -W -B -a -l -s -t -d]
+run.stdin sed [-E -a -n]
 run.stdin sh
 run.file soelim [-C -r -t]
-run.file sort
+run.file sort [-c -m -u -s -b]
 run.file split
 run.file strings [- -a -o]
 run.file strip [-u -r -i -A -n -S -X -T -N -x -]
 run.file sum
-run.file tail
+run.file tail [-f -F -q -r]
 run.file tbl [-C]
 run.stdin tee [-a -i]
 run.stdin tr a b
@@ -67,12 +67,9 @@ run.file troff [-a -b -c -C -E -U]
 run.file tsort [-l -q]
 run.file ul [-i]
 run.double uniq [-d -i]
+run.file units [-q] -f
 run.file wc [-c -l -m -w]
-run.stdin xargs 
+run.stdin xargs [-0 -p -d -x]
 run.file yacc
-run.file zic [-D -s]
+run.file zic [-D -v -s]
 run.stdin zsh
-
-
-
-
