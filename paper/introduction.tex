@@ -1,0 +1,42 @@
+
+
+
+Fuzz testing is a powerful automated software testing technique that tests the reliability of softwares and systems. In fuzz testing, a huge amount of random strings are generated and fed into utilities to test whether they are able to tolerate unexpected or invalid data, which indicates the reliability of the utilities. This technique is inexpensive and effective in identifying flaws and increasing system reliability, which is an essential and helpful complement to formal verification techniques \cite{fuzz1990}.
+
+In the original fuzz study in 1990, in which 88 utility programs were tested on seven Unix-based systems, 25-33\% of them were hung or crashed by certain fuzz input, indicating that fuzz testing is an effective tool in detecting bugs in operating systems \cite{fuzz1990}. A later study in 1995 revisited fuzz testing in nine Unix-based systems, including Linux, and found noticeable improvement of reliability in all systems tested compared to 1990, but still showed significant rates of failure \cite{fuzz1995}. Although more recent fuzz testing has been done in Windows NT and MacOS \cite{fuzz2000} \cite{fuzz2006}, primarily focusing on GUI-based applications, a systematic evaluation of Unix-based systems by fuzz is lacking since 1995. Therefore, it will be extremely valuable to test the reliability of utility applications by fuzz in a variety of current, widely-used, Unix-based systems. 
+
+In this study, we applied fuzz testing to the following Unix-based systems: Linux, FreeBSD, MacOS, and Xv6. The reasons why we chose the above systems are as follows:
+
+Linux is the most widely used free Unix-like operating system, the utilities of which were tested by fuzz tools in 1995. After more than 20 years of development and updates, the reliability of utilities on modern Linux system might differ significantly from those detected in the previous study. Therefore, revisiting the utilities in Linux will reveal if the previously-identified bugs have been fixed and if any new flaws have emerged. 
+Similarly, we reapplied fuzz testing to MacOS, which is one of the most prevalent commercial operating systems for laptops and personal computers and has been updated substantially since the last fuzz testing in 2006\cite{fuzz2006}. 
+FreeBSD is an open-source operating system descended from BSD, which is a Unix-like system developed by UCB. Outstanding compatibility has led to its widespread use on web servers. Since previous studies succeeded in crashing Linux utilities, we wondered if fuzz testing will detect bugs in FreeBSD.
+Xv6 is a lightweight UNIX based operating system designed for educational purposes by MIT, which is prevalent in universities and colleges \cite{Xv6page}. Fuzzing tests on Xv6 will benefit the students and instructors who use Xv6 in operating system courses.
+
+
+
+% 这个工作主要分为4部分：
+% 1 我们更新了旧的fuzz和ptyjig的代码，使其可以成功的编译运行，并且尽可能地跨平台。
+% 2 我们提供了Xv6平台上进行fuzz测试的工具。
+% 3 我们生成测试数据，对不同Unix平台的代码进行fuzz测试。
+% 4 我们收集fuzz测试的结果，使用debug工具对能获得源码的cmd进行debug，记录出现的问题。并与之前的研究进行对比，分析当今几个unix平台上cmd的reliability。
+
+Our study has 4 parts:
+
+1. Update the source code of fuzz tools, so that they can be compiled successfully and run on modern Unix systems.
+
+2. Provide fuzz tools on Xv6 platform for other developers and researchers.
+
+3. Generate abundant random test data and apply fuzz testing on utilities of Unix variants.
+
+4. Collect the results of fuzz testing, analyze the underlying bugs, compare our record with previous research, and evaluate the reliability of utilities on modern Unix systems.
+
+% 这个工作的主要结果有：
+% XXX
+
+% The major results of this study are:
+% 1 XXX
+% ...
+
+% section2讲了xxx，section3讲了xxx。
+Section 2 describes how we updated fuzz tools and testing scripts for Linux, MacOS, FreeBSD, and Xv6. Section 3 presents the results from fuzz testing and the analysis for the causes of utility failure. In Section 4, we discussed several challenges in analyzing test results and debugging using debuggers and source codes, as well as some limits of fuzz testing. Section 5 discusses future work and Section 6 provides our conclusions.
+
