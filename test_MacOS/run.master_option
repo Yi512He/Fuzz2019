@@ -1,10 +1,11 @@
-run.file as [-g -W -q]
+run.file as [-arch_multiple -force_cpusubtype_ALL -dynamic -static -n -f -g -W -L -q]
+run.stdin as [-arch_multiple -force_cpusubtype_ALL -dynamic -static -n -f -g -W -L -q]
 run.file awk '{print}'
 run.stdin bc [-l -w -s -q]
-run.file bison [-d -g -k -l -n -t -v -y] 
+run.file bison [-d -g -k -l --no-lines -n --no-parser --token-table -t --debug --verbose -y --yacc --fixed-output-files] 
 run.file calendar -f
 run.file cat [-b -e -n -s -t -u -v]
-run.cp t.c cc [-E -S -c -ansi]
+run.cp t.c cc [-E -fsyntax-only -S -c -ansi -trigraphs -ffreestanding -fno-builtin -fmath-errno -fmath-errno -fpascal-strings -fms-extensions -fborland-extensions -fwritable-strings -flax-vector-conversions -fblocks -fobjc-nonfragile-abi -g -fstandalone-debug -fno-standalone-debug -fexceptions -ftrapv -fcommon -flto -save-temps -save-stats -integrated-as -time -ftime-report -nostdinc]
 run.file checknr [-a -c -f -s]  
 run.double cmp
 run.stdin col [-b -f -h -p -x]
