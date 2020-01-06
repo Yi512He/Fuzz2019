@@ -14,11 +14,11 @@ run.stdin colrm 6
 run.double comm [-1 -2 -3 -i]
 run.file compress [-c -f]
 run.file cpp [-b -c -d -e -f -F]
-run.stdin csh
+run.stdin csh 
 run.file ctags [-B -F -a -d -t -u -w -x]
 run.file cut [-n -s] -b 10
 run.stdin dc 
-run.stdin dd
+run.stdin dd 
 run.double diff [-i -E -b -a -p]
 run.stdin ed [-s -x]
 run.stdin eqn [-r -C -N -R]
@@ -33,7 +33,7 @@ run.stdin lldb [-d -e -x -w]
 run.file grep "e" -f
 run.stdin grn [-C -s]
 run.file groff [-e -l -N -p]
-run.file head
+run.file head 
 run.file indent [-bacc -br -lp -st -troff]
 run.double join
 run.file lex [-Ca -Ce -Cf -CF -Cm -Cr -f -F -b -d -p -s -T -w -v -7 -8 -l -X]
@@ -41,7 +41,7 @@ run.file look a [-d -f]
 run.stdin m4 [-E -P -Q -s -G]
 run.file make [-B -d -e -i -k -L -n -p -q -r -R -s -S] -f
 run.stdin md5 [-p -q -r -t -x]
-run.file mdls
+run.file mdls [-name -raw -nullMarker]
 run.file mig [-v -L -K -s -MD]
 run.stdin neqn
 run.file nm [-A]
