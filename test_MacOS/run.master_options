@@ -36,7 +36,6 @@ run.file groff [-e -l -N -p]
 run.file head 
 run.file indent [-bacc -br -lp -st -troff]
 run.double join
-run.file lex [-Ca -Ce -Cf -CF -Cm -Cr -f -F -b -d -p -s -T -w -v -7 -8 -l -X]
 run.file look a [-d -f]
 run.stdin m4 [-E -P -Q -s -G]
 run.file make [-B -d -e -i -k -L -n -p -q -r -R -s -S] -f
