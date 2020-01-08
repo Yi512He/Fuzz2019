@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{fuzz1990}
+B.~P. Miller, L.~Fredriksen, and B.~So.
+\newblock An empirical study of the reliability of unix utilities.
+\newblock {\em Communications of the ACM}, 33(12):32--44, 1990.
+
+\bibitem{fuzz1995}
+B.~P. Miller, D.~Koski, C.~P. Lee, V.~Maganty, R.~Murthy, A.~Natarajan, and
+  J.~Steidl.
+\newblock Fuzz revisited: A re-examination of the reliability of unix utilities
+  and services.
+\newblock 1995.
+
+\bibitem{fuzz2000}
+J.~E. Forrester and B.~P. Miller.
+\newblock An empirical study of the robustness of windows nt applications using
+  random testing.
+\newblock {\em Proceedings of the 4th USENIX Windows System Symposium},
+  4:59--68, 2000.
+
+\bibitem{fuzz2006}
+B.~P. Miller, G.~Cooksey, and F.~Moore.
+\newblock An empirical study of the robustness of macos applications using
+  random testing.
+\newblock {\em Proceedings of the 1st international workshop on Random
+  testing}, pages 46--54, 2006.
+
+\bibitem{Xv6page}
+R.~Cox, F.~Kaashoek, and R.~Morris.
+\newblock Xv6, a simple unix-like teaching operating system, 2019.
+\newblock \url{https://pdos.csail.mit.edu/6.828/2012/xv6.html}.
+
+\bibitem{Xv6manual}
+R.~Cox, F.~Kaashoek, and R.~Morris.
+\newblock xv6 a simple, unix-like teaching operating system, 2014.
+\newblock \url{https://pdos.csail.mit.edu/6.828/2014/xv6/book-rev8.pdf}.
+
+\bibitem{KILL(2)}
+Linux programmer's mannual, 2019.
+\newblock \url{http://man7.org/linux/man-pages/man2/kill.2.html}.
+
+\end{thebibliography}
