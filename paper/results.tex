@@ -9,24 +9,23 @@
        \hline
        as & hang  &   &    \\
        awk &   &   &    \\
-       bc & hang  & crash  & hang   \\
-       bison & hang  &   &    \\
+       bc &   & crash  & hang   \\
+       bison &   &   &    \\
        calendar &   &   &    \\
        cat &   &   &    \\
-       cc & hang  &   &    \\
+       cc &   &   &    \\
        checknr & N/A  &   &  crash  \\
        cmp &   &   &    \\
-       col &   &   &    \\
+       col &   &   &  crash  \\
        colcrt &   &   &    \\
        colrm &   &   &    \\
        comm &   &   &    \\
        compress & N/A  &   &    \\
        cpp &   &   &    \\
        csh &   &   &    \\
-       ctags &   &   &    \\
-       ctree & N/A  & N/A  & N/A   \\
+       ctags &   &   & crash   \\
        cut &   &   &   \\
-       dc & hang  &   &    \\
+       dc & hang  & hang  &    \\
        dd &   &   &    \\
        diff &   &   &    \\
        ed &   &   &    \\
@@ -50,22 +49,20 @@
        expr &   &   &    \\
        f77 &   & N/A  & N/A   \\
        find & crash  &   &    \\
-       flex & hang  & crash  &    \\
-       fmt & hang  &   &    \\
+       flex &   & crash+hang  &    \\
+       fmt &   &   &    \\
        fold &   &   &    \\
-       ftp &   & N/A  &    \\
+       ftp &   & N/A  &  crash  \\
        gcc &   &   &    \\
-       gdb/lldb & crash  & crash  &  crash  \\
+       gdb/lldb & crash(gdb)  & crash(lldb)  &  crash(gdb)  \\
        grep &   &   &    \\
        grn & N/A  &   &    \\
-       groff & crash  & hang  &  crash  \\
+       groff & hang  & hang  &  hang  \\
        head &   &   &    \\
        htop &   &   &    \\
-       indent & N/A  & crash+hang  &    \\
+       indent & N/A  & crash+hang  & crash   \\
        join &   &   &    \\
        latex &   & N/A  &  N/A  \\
-       lex & hang  & crash  &    \\
-       lint & N/A  & N/A  & N/A   \\
        look &   &   &    \\
        m4 &   &   &    \\
        mail &   &   &    \\
@@ -92,22 +89,19 @@
        more &   &   &    \\
        neqn &   &   &    \\
        nm &   &   &    \\
-       nroff & hang  & hang  & crash \\
-       pc & N/A  & N/A  & N/A   \\
+       nroff & hang  & hang  & hang \\
        pic &   &   &    \\
        pr &   &   &    \\
-       ptags & N/A  & N/A  & N/A   \\
        ptx &   & N/A  & N/A   \\
        refer & N/A  &   &    \\
        rev &   &   &    \\
-       sch & N/A  & N/A  & N/A \\
        sdiff &   &   &    \\
        sed &   &   &    \\
        sh &   &   &    \\
        soelim &   &   &    \\
        sort &   &   &    \\
        spell & hang  & N/A  & N/A   \\
-       split & hang  &   &    \\
+       split &   &   &    \\
        \hline
        \hline
    \end{tabular}
@@ -134,21 +128,21 @@
        tex &   & N/A  & N/A   \\
        tr &   &   &    \\
        troff & crash  & crash  & crash   \\
-       tsort &   &   &    \\
+       tsort &   & hang  &    \\
        ul &   &   &    \\
        uniq &   &   &    \\
        units & N/A  &   &    \\
        vim &   &   &    \\
-       vgrind & N/A  & N/A  & crash   \\
+       vgrind & N/A  & N/A  &  hang  \\
        wc &   &   &    \\
        xargs &   &   &    \\
-       yacc & hang  &   & hang   \\
+       yacc &   &   &    \\
        zic &   &   &    \\
-       zsh &   & hang  & hang   \\
+       zsh & hang  & hang  & crash+hang   \\
        \hline
-       \# tested & 73  & 81  &  79  \\
-       \# crashes/hangs & 17  & 9  &  10  \\
-       \% & 23\%  & 11\%  & 13\%   \\ 
+       \# tested & 76  & 79  &  79  \\
+       \# crashes/hangs & 9  & 12  &  14  \\
+       \% & 12\%  & 15\%  & 18\%   \\ 
        \hline
        \hline
    \end{tabular}
@@ -162,15 +156,15 @@ In this section, we recapitulated the fuzz tests reported in our 1990, 1995, and
 
 
 \subsection{Quantitative Test Results}
-We tested 93 utilities across three platforms: Linux, MacOS, and FreeBSD. 65 of them are available in all three platforms. Table 1 lists all utilities tested across three platforms, and the utilities that were crashed or hung by our tests. We detected a total of 22 failed utilities, 17 in Linux, 9 in MacOS, and 10 in FreeBSD. 5 utilities (\texttt{troff}, \texttt{nroff}, \texttt{groff}, \texttt{bc}, and \texttt{gdb/lldb}) were crashed or hung in all three platforms, while the others were failed in one or two systems. 
+We tested 86 utilities across three platforms: Linux, MacOS, and FreeBSD. 70 of them are available in all three platforms. Table 1 lists all utilities tested across three platforms, and the utilities that were crashed or hung by our tests. We detected a total of 17 failed utilities, 9 in Linux, 12 in MacOS, and 14 in FreeBSD. 5 utilities (\texttt{troff}, \texttt{nroff}, \texttt{groff}, \texttt{zsh}, and \texttt{gdb/lldb}) were crashed or hung in all three platforms, while the others were failed in one or two systems. 
 
-The failure rate of Linux in the current study (17/73, 23\%) is apparently higher than in the 1995 study (5/55, 9\%). Of the five Linux utilities that were crashed or hung in the 1995 fuzz study, \texttt{dbx} and \texttt{indent} are no longer available in the current Linux system, \texttt{ctags} and \texttt{ul} were not crashed or hung in our current studies, and \texttt{lex} was hung in our current study rather than crashed in the 1995 study. However, we detected crash or hang in 16 additional Linux utilities. 9 of them were not tested previously, while the other 6 were tested but not failed in the 1995 study. One possible explanation for the additional hangs and crashes detected in the current study is that we generated fuzz input of much greater size  (up to 1e8 characters) than any previous studies (up to 1e5 characters), and thus exerted enough stress on the utilities to induce crashes or hangs. 
+The failure rate of Linux in the current study (9/76, 12\%) is slightly higher than that in the 1995 study (5/55, 9\%). Of the five Linux utilities that were crashed or hung in the 1995 fuzz study, \texttt{dbx} and \texttt{indent} are no longer available in the current Linux system, \texttt{ctags}, \texttt{lex} and \texttt{ul} were not crashed or hung in our current studies. However, we detected crash or hang in 9 additional Linux utilities. 7 of them were not tested previously, while the other 2(\texttt{as} and \texttt{nroff}) were tested but not failed in the 1995 study. One possible explanation for the additional hangs and crashes detected in the current study is that we generated fuzz input of much greater size  (up to 1e8 characters) than any previous studies (up to 1e5 characters), and thus exerted enough stress on the utilities to induce crashes or hangs. 
 
-Similarly, we detected a higher rate of failure in MacOS (9/81, 11\%) than the 2006 fuzz study (10/135, 7\%). One possible explanation is that in the current study, we did not test as many utilities as in the 2006 study, and none of the untested utilities in the current study were crashed or hung in the 2006 study. Of the 10 utilities that were crashed in the 2006 study, \texttt{expr}, \texttt{zic}, \texttt{as}, \texttt{ul}, and \texttt{vim} were not crashed or hung in our current study, \texttt{groff}, \texttt{zsh}, and \texttt{nroff} were hung instead of crashed while, and \texttt{indent} and \texttt{troff} were still crashed in our current study. We detected four additional failed utilities, all of which were tested but not crashed or hung in the 2006 study.
+Similarly, we detected a higher rate of failure in MacOS (12/79, 15\%) than the 2006 fuzz study (10/135, 7\%). One possible explanation is that in the current study, we did not test as many utilities as in the 2006 study, and none of the untested utilities in the current study were crashed or hung in the 2006 study. Of the 10 utilities that were crashed in the 2006 study, \texttt{expr}, \texttt{zic}, \texttt{as}, \texttt{ul}, and \texttt{vim} were not crashed or hung in our current study, \texttt{groff}, \texttt{zsh}, and \texttt{nroff} were hung instead of crashed while, \texttt{troff} was still crashed and \texttt{indent} had both crash and hang in our current study. We detected 3 additional failed utilities, all of which were tested but not crashed or hung in the 2006 study.
 
 Comparison between the current study and two previous fuzz studies revealed that some of the bugs that caused utilities to fail in the previous studies were fixed over the years, while some of these bugs still persists. However, we crashed or hung additional utilities in our current study. This could partially result from our updated fuzz test method that included larger size input and random selection of command line arguments.
 
-The failure rate of FreeBSD (10/79, 13\%), is slightly higher than MacOS, but significantly lower than Linux. Since FreeBSD was not tested in previous fuzz studies, we do not know how its reliability changed over the years. However, based on the above data, we can conclude that the reliability of utilities in MacOS and FreeBSD is better than that in Linux.
+The failure rate of FreeBSD (14/79, 18\%), is the highest among the three platforms we tested. Since FreeBSD was not tested in previous fuzz studies, we do not know how its reliability changed over the years. However, based on the above data, we can conclude that the reliability of utilities in Linux and MacOS is better than that in FreeBSD.
 
 For Xv6, we tested 6 out of 10 utilities in the Xv6 environment, including \texttt{echo}, \texttt{wc}, \texttt{kill}, \texttt{grep}, \texttt{cat}, and \texttt{mkdir}. However, we did not find any crashes or hangs.
 
@@ -301,9 +295,6 @@ A robust program might crash if it invokes a vulnerable program as a sub-process
 \subsubsection{Exceed Buffer Size}
 \texttt{spell} is a spell-checking utility which scans a text file for misspelled words. In the source code, it forks to create a child process and lets the child process run \texttt{ispell} using \texttt{exec()}. In the parent process, the input from \texttt{stdin} is written to a pipe. In the child process, the pipe serves as the \texttt{stdin} of \texttt{ispell}. When parent process writes a long string to the pipe, which exceeds the capacity of the pipe, the writer hangs.
 
-
-\subsubsection{Loop}
-\texttt{yylex()} is a commonly used lexical analyzer function, which recognizes tokens from the input string and returns them to the parser. This function recognizes tokens by building a state machine, and is used in \texttt{bc}, \texttt{flex}, \texttt{bison} and other utilities which need to parse input. However, random strings may lead to an infinite loop in state machine. However, due to the confusing logic that was encoded into hundreds of states, we are still debugging it.
 
 
 \subsubsection{Others}
