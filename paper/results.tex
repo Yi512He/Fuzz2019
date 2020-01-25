@@ -23,7 +23,7 @@
        compress & N/A  &   &    \\
        cpp &   &   &    \\
        csh &   &   &    \\
-       ctags &   &   & crash   \\
+       ctags &   & crash  & crash   \\
        cut &   &   &   \\
        dc & hang  & hang  &    \\
        dd &   &   &    \\
@@ -141,8 +141,8 @@
        zsh & hang  & hang  & crash+hang   \\
        \hline
        \# tested & 76  & 79  &  79  \\
-       \# crashes/hangs & 9  & 12  &  14  \\
-       \% & 12\%  & 15\%  & 18\%   \\ 
+       \# crashes/hangs & 9  & 13  &  14  \\
+       \% & 12\%  & 16\%  & 18\%   \\ 
        \hline
        \hline
    \end{tabular}
@@ -156,11 +156,11 @@ In this section, we recapitulated the fuzz tests reported in our 1990, 1995, and
 
 
 \subsection{Quantitative Test Results}
-We tested 86 utilities across three platforms: Linux, MacOS, and FreeBSD. 70 of them are available in all three platforms. Table 1 lists all utilities tested across three platforms, and the utilities that were crashed or hung by our tests. We detected a total of 17 failed utilities, 9 in Linux, 12 in MacOS, and 14 in FreeBSD. 5 utilities (\texttt{troff}, \texttt{nroff}, \texttt{groff}, \texttt{zsh}, and \texttt{gdb/lldb}) were crashed or hung in all three platforms, while the others were failed in one or two systems. 
+We tested 86 utilities across three platforms: Linux, MacOS, and FreeBSD. 70 of them are available in all three platforms. Table 1 lists all utilities tested across three platforms, and the utilities that were crashed or hung by our tests. We detected a total of 17 failed utilities, 9 in Linux, 13 in MacOS, and 14 in FreeBSD. 5 utilities (\texttt{troff}, \texttt{nroff}, \texttt{groff}, \texttt{zsh}, and \texttt{gdb/lldb}) were crashed or hung in all three platforms, while the others were failed in one or two systems. 
 
 The failure rate of Linux in the current study (9/76, 12\%) is slightly higher than that in the 1995 study (5/55, 9\%). Of the five Linux utilities that were crashed or hung in the 1995 fuzz study, \texttt{dbx} and \texttt{indent} are no longer available in the current Linux system, \texttt{ctags}, \texttt{lex} and \texttt{ul} were not crashed or hung in our current studies. However, we detected crash or hang in 9 additional Linux utilities. 7 of them were not tested previously, while the other 2(\texttt{as} and \texttt{nroff}) were tested but not failed in the 1995 study. One possible explanation for the additional hangs and crashes detected in the current study is that we generated fuzz input of much greater size  (up to 1e8 characters) than any previous studies (up to 1e5 characters), and thus exerted enough stress on the utilities to induce crashes or hangs. 
 
-Similarly, we detected a higher rate of failure in MacOS (12/79, 15\%) than the 2006 fuzz study (10/135, 7\%). One possible explanation is that in the current study, we did not test as many utilities as in the 2006 study, and none of the untested utilities in the current study were crashed or hung in the 2006 study. Of the 10 utilities that were crashed in the 2006 study, \texttt{expr}, \texttt{zic}, \texttt{as}, \texttt{ul}, and \texttt{vim} were not crashed or hung in our current study, \texttt{groff}, \texttt{zsh}, and \texttt{nroff} were hung instead of crashed while, \texttt{troff} was still crashed and \texttt{indent} had both crash and hang in our current study. We detected 3 additional failed utilities, all of which were tested but not crashed or hung in the 2006 study.
+Similarly, we detected a higher rate of failure in MacOS (13/79, 16\%) than the 2006 fuzz study (10/135, 7\%). One possible explanation is that in the current study, we did not test as many utilities as in the 2006 study, and none of the untested utilities in the current study were crashed or hung in the 2006 study. Of the 10 utilities that were crashed in the 2006 study, \texttt{expr}, \texttt{zic}, \texttt{as}, \texttt{ul}, and \texttt{vim} were not crashed or hung in our current study, \texttt{groff}, \texttt{zsh}, and \texttt{nroff} were hung instead of crashed while, \texttt{troff} was still crashed and \texttt{indent} had both crash and hang in our current study. 
 
 Comparison between the current study and two previous fuzz studies revealed that some of the bugs that caused utilities to fail in the previous studies were fixed over the years, while some of these bugs still persists. However, we crashed or hung additional utilities in our current study. This could partially result from our updated fuzz test method that included larger size input and random selection of command line arguments.
 
