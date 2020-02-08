@@ -3,7 +3,7 @@ import subprocess
 import random
 
 fnull = open(os.devnull, 'w')
-path = "./NewTest_big"
+path = "./NewTest_big2"
 
 if not os.path.exists(path):
   os.mkdir(path)
@@ -13,7 +13,7 @@ start = 0
 
 # -0
 for i in range(start, start+inc):
-  continue
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
   	continue
   n = random.randint(1e6, 1e7)
@@ -22,7 +22,7 @@ start = start + inc
 
 # -a
 for i in range(start, start+inc):
-  continue
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
   	continue
   n = random.randint(1e6, 1e7)
@@ -31,7 +31,7 @@ start = start + inc
 
 # -p
 for i in range(start, start+inc):
-  continue
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
   	continue
   n = random.randint(1e6, 1e7)
@@ -40,6 +40,7 @@ start = start + inc
 
 # -0 + -l
 for i in range(start, start+inc):
+  print(i)
   #if os.path.isfile(os.path.join(path, "t%d" % i)):
   #	continue
   l = 1e5
@@ -49,6 +50,7 @@ start = start + inc
 
 # -a + -l
 for i in range(start, start+inc):
+  print(i)
   #if os.path.isfile(os.path.join(path, "t%d" % i)):
   #	continue
   l = 1e5
@@ -58,6 +60,7 @@ start = start + inc
 
 # -p + -l
 for i in range(start, start+inc):
+  print(i)
   #if os.path.isfile(os.path.join(path, "t%d" % i)):
   #	continue
   l = 1e5
