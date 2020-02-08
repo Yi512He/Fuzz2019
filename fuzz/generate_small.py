@@ -24,6 +24,7 @@ start = start + inc
 
 # -a
 for i in range(start, start+inc):
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
@@ -33,6 +34,7 @@ start = start + inc
 
 # -p
 for i in range(start, start+inc):
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
@@ -42,6 +44,7 @@ start = start + inc
 
 # -0 + -l
 for i in range(start, start+inc):
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
@@ -52,6 +55,7 @@ start = start + inc
 
 # -a + -l
 for i in range(start, start+inc):
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
@@ -62,6 +66,7 @@ start = start + inc
 
 # -p + -l
 for i in range(start, start+inc):
+  print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
   time.sleep(1.1)
