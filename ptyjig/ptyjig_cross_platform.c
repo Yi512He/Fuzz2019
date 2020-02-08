@@ -198,12 +198,6 @@ int writing = TRUE;
 /* A flag indicating status of the executing program */
 int executing = TRUE;
 
-
-
-
-
-
-
 /*
  * Unfix the above and exit when we are done. 
  */
