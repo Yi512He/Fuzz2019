@@ -1,4 +1,4 @@
-/* Copyright (c) 1989 Lars Fredriksen, Bryan So, Barton Miller
+/* Copyright (c) 2020 Lars Fredriksen, Bryan So, Barton Miller
  * All rights reserved
  *  
  * This software is furnished under the condition that it may not
@@ -8,10 +8,6 @@
  *
  * Any use of this software must include the above copyright notice.
  */
-
-
-// Copyright (c) 1989 by Lars Fredriksen, Bryan So and Barton Miller.
-// All rights reserved.
 
 /*-
  *  Fuzz generator
@@ -53,7 +49,12 @@
  *           
  *
  *  Authors:
- *           Lars Fredriksen, Bryan So
+ *
+ *  	Lars Fredriksen, Bryan So
+ *
+ *  Updated by:
+ *
+ *  	Mengxiao Zhang, Emma He
  */
 
 static char *progname = "fuzz";
@@ -203,8 +204,12 @@ void init()
      /*
       * Init random numbers 
       */
-     if (!flags)
-	  seed = (int) (time(&now) % 37);
+     if (!flags){
+      // seed = (int)time(&now) % 37;
+	  seed = (int)time(&now);
+	  // printf("seed is %ld", seed);
+	}
+
      srand(seed);
 
      /*

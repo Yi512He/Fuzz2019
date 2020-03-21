@@ -1,12 +1,11 @@
 /*    
- *  Copyright (c) 1989 Lars Fredriksen, Bryan So, Barton Miller
+ *  Copyright (c) 2020 Lars Fredriksen, Bryan So, Barton Miller
  *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  */
-
 
 /*
  *  ptyjig -- Super pipe for piping output to Unix utilities.
@@ -50,14 +49,13 @@
  *
  *  Authors:
  *
- *     Bryan So, Lars Fredriksen
+ *    Bryan So, Lars Fredriksen
  *
  *  Updated by:
  *
- *     Mengxiao Zhang, Emma He
+ *    Mengxiao Zhang, Emma He
  *
  */
-
 
 #define DEBUG_off
 
@@ -862,11 +860,6 @@ int main(int argc, char** argv) {
       	  core = 139;
       	}
       }
-
-      // If process terminates normally, return its retcode 
-      // If abnormally, return termsig.  This is not exactly 
-      // the same as csh, since the csh method is not too obvious 
-      return core;
     }
     return core;
   }

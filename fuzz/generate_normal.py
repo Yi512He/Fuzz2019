@@ -1,3 +1,11 @@
+#  Copyright (c) 2020 Emma He, Mengxiao Zhang, Barton Miller
+#
+#  This program is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+# this script is used to generate normal test cases.
+
 import os, sys, re
 import subprocess
 import random
@@ -15,6 +23,7 @@ for i in range(0, 100):
   print(i)
   if os.path.isfile(os.path.join(path, "t%d" % i)):
     continue
+  # sleep more than 1 second to prevent fuzz from using the same random seed as the previous one.
   time.sleep(1.1)
   subprocess.call(["fuzz", "-0", "-o", os.path.join(path, "t%d" % i)], stdout=fnull, stderr=subprocess.STDOUT)
 
