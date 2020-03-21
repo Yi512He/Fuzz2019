@@ -1,24 +1,3 @@
-
-#define DEBUG_off
-
-// detect the operating system
-// MACOS
-#ifdef __APPLE__
-#define MACOS
-#endif
-
-// LINUX
-#ifdef __linux__
-#define LINUX
-#endif
-
-// FREEBSD
-#ifdef __FreeBSD__
-#define FREEBSD
-#endif
-
-
-
 /*    
  *  Copyright (c) 1989 Lars Fredriksen, Bryan So, Barton Miller
  *
@@ -80,6 +59,24 @@
  */
 
 
+#define DEBUG_off
+
+// detect the operating system
+// MACOS
+#ifdef __APPLE__
+#define MACOS
+#endif
+
+// LINUX
+#ifdef __linux__
+#define LINUX
+#endif
+
+// FREEBSD
+#ifdef __FreeBSD__
+#define FREEBSD
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
@@ -91,30 +88,24 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
+
 int posix_openpt(int flags);
 int grantpt(int fd);
 int unlockpt(int fd);
 char *ptsname(int fd);
 int ptsname_r(int fd, char *buf, size_t buflen);
 
-
-
 #ifdef LINUX
 #include <sys/termios.h>
 #endif
 
-#include <fcntl.h>
-#include <unistd.h>
-// #include <sgtty.h>
 
-
+/* GLOBAL VARIABLES */
 #define CHILD     0
 #define O_CBREAK  0x00000002
 #define TRUE  1
 #define FALSE 0
-
-
-/* GLOBAL VARIABLES */
 
 #ifdef LINUX
 #define ECHO      0000010
@@ -123,35 +114,37 @@ int ptsname_r(int fd, char *buf, size_t buflen);
 #define CBREAK    O_CBREAK
 #endif
 
-
 char     flage = TRUE;
 int      flags = FALSE;
 int      flagx = FALSE;
 int      flagi = FALSE;
 int      flago = FALSE;
-unsigned flagt = 2 * 1000000;   /* Timeout interval in useconds */
-unsigned flagw = FALSE;         /* Starting wait in useconds */
-unsigned flagd = FALSE;         /* Delay between keystrokes in useconds */
+// Timeout interval in useconds
+unsigned flagt = 2 * 1000000;   
+// Starting wait in useconds
+unsigned flagw = FALSE;         
+// Delay between keystrokes in useconds
+unsigned flagd = FALSE;         
 
 char* namei;
 char* nameo;
 FILE* filei;
 FILE* fileo;
 
-/* pids for the reader, writer and exec */
+// pids for the reader, writer and exec
 int readerPID = -1;
 int writerPID = -1;
 int execPID   = -1; 
 
-/* tty and pty file descriptors */
+// tty and pty file descriptors
 int   tty = -1;
 int   pty = -1; 
 
 char  ttyNameUsed[40];
 char* progname;
 
-/* for more verbose output at the end of execution */
-/* makes reason for dying more obvious */
+// for more verbose output at the end of execution
+// makes reason for dying more obvious
 struct  mesg {
   char    *iname;
   char    *pname;
@@ -192,55 +185,48 @@ struct  mesg {
 };
 
 
-/* A flag indicating status of the writer */
+// A flag indicating status of the writer
 int writing = TRUE;
 
-/* A flag indicating status of the executing program */
+// A flag indicating status of the executing program
 int executing = TRUE;
 
-/*
- * Unfix the above and exit when we are done. 
- */
+// Unfix the above and exit when we are done. 
 void done() {
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: in done()\n" );
+  fprintf(stderr, "ptyjig: in done()\n");
 #endif
 
-  /* Close output files if opened */
-  if( flagi ) {
-    fclose( filei );
+  // Close output files if opened
+  if(flagi) {
+    fclose(filei);
     flagi = FALSE;
   }
 
-  if( flago ) {
-    fclose( fileo );
+  if(flago) {
+    fclose(fileo);
     flago = FALSE;
   }
 
 }
 
-
-
-/*
- * Signal handler for SIGCHLD
- */
+// Signal handler for SIGCHLD
 void sigchld(int sig) {
   int pid;
   //union wait status;
   int status;
 
-
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: got signal SIGCHLD\n" );
+  fprintf(stderr, "ptyjig: got signal SIGCHLD\n");
 #endif
 
-  /* Guarantee to return since a child is dead */
-  pid = wait3( (int*)&status, WUNTRACED, 0 );  
+  // Guarantee to return since a child is dead
+  pid = wait3((int*)&status, WUNTRACED, 0);  
 #ifdef DEBUG
     printf("sigchld wait3: pid = %d\n",pid);
 #endif
 
-  if( pid ) {
+  if(pid) {
 #ifdef DEBUG
     printf("ptyjig: pid = %d\n",pid);
     printf("ptyjig: status = %d %d %d %d %d\n",
@@ -249,153 +235,129 @@ void sigchld(int sig) {
 
 #endif
 
-    if( WSTOPSIG(status) == SIGTSTP ) {
-      kill( pid, SIGCONT );
+    if(WSTOPSIG(status) == SIGTSTP) {
+      kill(pid, SIGCONT);
     }
     else {
-      signal( SIGINT,   SIG_DFL );
-      signal( SIGQUIT,  SIG_DFL ); 
-      signal( SIGTERM,  SIG_DFL ); 
-      signal( SIGWINCH, SIG_DFL ); 
-      signal( SIGCHLD,  SIG_IGN );
+      signal(SIGINT,   SIG_DFL);
+      signal(SIGQUIT,  SIG_DFL); 
+      signal(SIGTERM,  SIG_DFL); 
+      signal(SIGWINCH, SIG_DFL); 
+      signal(SIGCHLD,  SIG_IGN);
 
       done();
 
-      if( pid != execPID ) {
+      if(pid != execPID) {
 #ifdef DEBUG
-        fprintf( stderr, "ptyjig: somebody killed my child\n" );
-        fprintf( stderr, "ptyjig: killing execPID = %d\n", execPID );
+        fprintf(stderr, "ptyjig: somebody killed my child\n");
+        fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
 #endif
-
-        kill( execPID, SIGKILL);          /* kill the exec too */
-        kill( readerPID, WTERMSIG(status)); /* use the same method to suicide */
+        // kill the exec too
+        kill(execPID, SIGKILL);          
+        // use the same method to suicide
+        kill(readerPID, WTERMSIG(status)); 
       }
 
+      // Just to make sure it is killed
+      kill(execPID, SIGKILL); 
 
-      kill( execPID, SIGKILL ); /* Just to make sure it is killed */
-
-      if( pid != writerPID && writerPID != -1 ) {
+      if(pid != writerPID && writerPID != -1) {
 #ifdef DEBUG
-        printf( "ptyjig: killing writerPID = %d\n", writerPID );
+        printf("ptyjig: killing writerPID = %d\n", writerPID);
 #endif
-        kill( writerPID, SIGKILL );
+        kill(writerPID, SIGKILL);
       }
 
-      if( WTERMSIG(status) ) {
-        fprintf( stderr,"ptyjig: %s: %s%s\n",progname,
+      if(WTERMSIG(status)) {
+        fprintf(stderr,"ptyjig: %s: %s%s\n",progname,
                  mesg[WTERMSIG(status)].pname,
-                 WCOREDUMP(status) ? " (core dumped)" : "" );
+                 WCOREDUMP(status) ? " (core dumped)" : "");
       }
 
-      /* If process terminates normally, return its retcode */
-      /* If abnormally, return termsig.  This is not exactly */
-      /* the same as csh, since the csh method is not too obvious */
+      // If process terminates normally, return its retcode
+      // If abnormally, return termsig.  This is not exactly
+      // the same as csh, since the csh method is not too obvious
 
-      exit( WTERMSIG(status) ? WTERMSIG(status) : WEXITSTATUS(status) );
+      exit(WTERMSIG(status) ? WTERMSIG(status) : WEXITSTATUS(status));
     }
 
     exit(0);
   }
 }
 
-
-
-/*
- * Clean up processes
- */
+// Clean up processes
 void clean() {
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: in clean()\n" );
+  fprintf(stderr, "ptyjig: in clean()\n");
 #endif
 
-  signal( SIGCHLD, SIG_IGN ); /* Not necessary for sigchld to take over */
+  // Not necessary for sigchld to take over
+  signal(SIGCHLD, SIG_IGN); 
 
-  /* must close files, and kill all running processes */
-  if( execPID != -1 ) {
+  // must close files, and kill all running processes
+  if(execPID != -1) {
 #ifdef DEBUG
-    fprintf( stderr, "ptyjig: killing execPID = %d\n", execPID );
+    fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
 #endif
-    kill( execPID, SIGKILL );
+    kill(execPID, SIGKILL);
   }
 
-  if( writerPID != -1 ) {
+  if(writerPID != -1) {
 #ifdef DEBUG
-    fprintf( stderr, "ptyjig: killing writerPID = %d\n", writerPID );
+    fprintf(stderr, "ptyjig: killing writerPID = %d\n", writerPID);
 #endif
-    kill( writerPID, SIGKILL );
+    kill(writerPID, SIGKILL);
   }
 
   done();
 }
 
-
-
-/* 
- * Handle window size change SIGWINCH
- */
+// Handle window size change SIGWINCH
 void sigwinch(int sig) {
   struct winsize ws;
 
-  ioctl( 0,   TIOCGWINSZ, &ws );
-  ioctl( pty, TIOCSWINSZ, &ws );
+  ioctl(0,   TIOCGWINSZ, &ws);
+  ioctl(pty, TIOCSWINSZ, &ws);
 
-  kill( execPID, SIGWINCH );
+  kill(execPID, SIGWINCH);
 }
 
-
-
-/* 
- * Handle user interrupt SIGINT
- */
+// Handle user interrupt SIGINT
 void clean_int(int sig) {
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: got signal SIGINT\n" );
+  fprintf(stderr, "ptyjig: got signal SIGINT\n");
 #endif
 
-  signal( SIGINT, SIG_DFL );
+  signal(SIGINT, SIG_DFL);
   clean();
 
-  kill( readerPID, SIGINT );
+  kill(readerPID, SIGINT);
 }
 
-
-
-/* 
- * Handle quit signal SIGQUIT
- */
+// Handle quit signal SIGQUIT
 void clean_quit(int sig) {
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: got signal SIGQUIT\n" );
+  fprintf(stderr, "ptyjig: got signal SIGQUIT\n");
 #endif
 
   clean();
-  signal( SIGQUIT, SIG_DFL );
-  kill( readerPID, SIGQUIT );
+  signal(SIGQUIT, SIG_DFL);
+  kill(readerPID, SIGQUIT);
 }
-
-
-
-/* 
- * Handle user terminate signal SIGTERM
- */
+ 
+// Handle user terminate signal SIGTERM
 void clean_term(int sig) {
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: got signal SIGTERM\n" );
+  fprintf(stderr, "ptyjig: got signal SIGTERM\n");
 #endif
 
   clean();
-  signal( SIGTERM, SIG_DFL );
+  signal(SIGTERM, SIG_DFL);
 
-  kill( readerPID, SIGTERM );
+  kill(readerPID, SIGTERM);
 }
 
-
-
-
-
-/*
- * Opens a master pseudo-tty device
- */
+// Opens a master pseudo-tty device
 void setup_pty() {
   char    c;
   int     i;
@@ -423,79 +385,67 @@ void setup_pty() {
   }
 }
 
-
-/*
- * Opens the slave device. 
- */
+// Opens the slave device. 
 void setup_tty() {
   tty = open(ptsname(pty), O_RDWR);
-  if( tty < 0 ) {
-    perror( ttyNameUsed );
-    exit( 1 );
+  if(tty < 0) {
+    perror(ttyNameUsed);
+    exit(1);
   }
-
 }
 
-
-
-/*
- * Sets boolean to false to stop CMD's execution?
- */
-void execute_done( int sig ) {
+// Sets boolean to false to stop CMD's execution
+void execute_done(int sig) {
   executing = FALSE;
 }
 
-
-
-/*
- * Fork off a copy and execute "arg".  Before executing, assign "tty" to
- * stdin, stdout and stderr, so that the output of the child program can be
- * recorded by the other end of "tty". 
- */
-void execute( char** cmd ) {
+// Fork off a copy and execute "arg".  Before executing, assign "tty" to
+// stdin, stdout and stderr, so that the output of the child program can be
+// recorded by the other end of "tty". 
+void execute(char** cmd) {
   int fstdin, fstdout, fstderr;
 
+  signal(SIGUSR1, execute_done);
 
-  signal( SIGUSR1, execute_done );
-
-  if(  (execPID = fork()) == -1  ) {
+  if((execPID = fork()) == -1) {
     perror("execute(): fork");
-    exit( 1 );
+    exit(1);
   }
 
-  if( execPID == CHILD ) {
-    /* save copies in case exec fails */
+  if(execPID == CHILD) {
+    // save copies in case exec fails
     fstdin  = dup(0);
     fstdout = dup(1);
     fstderr = dup(2); 
 
     setup_tty();
-
-    dup2(tty, 0);        /* copy tty to stdin  */
-    dup2(tty, 1);        /* copy tty to stdout  */
-    dup2(tty, 2);        /* copy tty to stderr  */
+    // copy tty to stdin  
+    dup2(tty, 0);        
+    // copy tty to stdout  
+    dup2(tty, 1);        
+    // copy tty to stderr  
+    dup2(tty, 2);        
 
     close(tty);
 
-    if( flags ) {        /* suppress signals if -s present */
-      signal( SIGINT,  SIG_IGN );
-      signal( SIGQUIT, SIG_IGN );
-      signal( SIGTSTP, SIG_IGN );
+    // suppress signals if -s present 
+    if(flags) {        
+      signal(SIGINT,  SIG_IGN);
+      signal(SIGQUIT, SIG_IGN);
+      signal(SIGTSTP, SIG_IGN);
     }
 
-    /* Better be setup to handle a SIGUSR1 */
-    kill( getppid(), SIGUSR1 );
+    // Better be setup to handle a SIGUSR1 
+    kill(getppid(), SIGUSR1);
 
-    execvp( cmd[0], cmd );
+    execvp(cmd[0], cmd);
 
-    /* IF IT EVER GETS HERE, error when executing "cmd"  */
+    // IF IT EVER GETS HERE, error when executing "cmd"  
     dup2(fstdin,  0);
     dup2(fstdout, 1);
     dup2(fstderr, 2);
 
-
-
-    perror( cmd[0] );
+    perror(cmd[0]);
 
     exit(1);
   }
@@ -503,171 +453,144 @@ void execute( char** cmd ) {
     printf("execPID: pid = %d\n",execPID);
 #endif
 
+  // let child run until it gives signal 
+  while(executing); 
 
-  while( executing ); /* let child run until it gives signal */
-
-  usleep( flagw );
+  usleep(flagw);
 
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: execPID = %d\n", execPID );
+  fprintf(stderr, "ptyjig: execPID = %d\n", execPID);
 #endif
 }
- 
 
-/* 
- *  Sleeps for 1 second, then KILLs PID execPID using SIGKILL
- */
+// Sleeps for 1 second, then KILLs PID execPID using SIGKILL
 void reader_done(int sig) {
-  sleep( 1 );   /* Let execPID die naturally */
+  // Let execPID die naturally
+  sleep(1);   
 
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: killing execPID = %d\n", execPID );
+  fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
 #endif
 
-  kill( execPID, SIGKILL ); /* If it doesn't die on its own, kill it */
+  // If it doesn't die on its own, kill it 
+  kill(execPID, SIGKILL); 
 }
 
-
-/*
- * Sets boolean to false to stop writer
- */
-void writer_done( int sig ) {
+// Sets boolean to false to stop writer
+void writer_done(int sig) {
   writing = FALSE;
   ualarm(flagt, 0);
 }
 
-
-/*
- * Read from stdin and send everything character read to "pty".  Record the
- * keystrokes in "filei" if -i flag is on. 
- */
+// Read from stdin and send everything character read to "pty".  Record the
+// keystrokes in "filei" if -i flag is on. 
 void writer() {
   char c;
 
-
-  /*
-   * Read from keyboard continuously and send it to "pty" 
-   */
-  while( read(0, &c, 1) == 1 ) { 
-    if( write(pty, &c, 1) != 1 ) {
+  // Read from keyboard continuously and send it to "pty" 
+  while(read(0, &c, 1) == 1) { 
+    if(write(pty, &c, 1) != 1) {
       break;
     }
 
     if (flagi) {
-      /* Do not send '\r', send '\n' instead */
-      if( c == '\r' ) {
+      // Do not send '\r', send '\n' instead 
+      if(c == '\r') {
         c = '\n';
       }
 
-      if(  write( fileno(filei), &c, 1 ) != 1  ) {
-        perror( namei );
+      if(write(fileno(filei), &c, 1) != 1) {
+        perror(namei);
         break;
       }
     }
 
-    /* Delay writing to "pty" if flagged */
-    if( flagd ) {
-      usleep( flagd );
+    // Delay writing to "pty" if flagged 
+    if(flagd) {
+      usleep(flagd);
     }
   }
 
-  if( flage ) {
-    (void)write( pty, &flage, 1 );
+  if(flage) {
+    (void)write(pty, &flage, 1);
   }
 
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: writer finished\n" );
+  fprintf(stderr, "ptyjig: writer finished\n");
 #endif
 
-  kill( readerPID, SIGUSR1 ); /* tell reader to quit if no more char from exec */
+  // tell reader to quit if no more char from exec
+  kill(readerPID, SIGUSR1); 
 
-  while( 1 );  /* XXX: INFINITE LOOP: Wait until parent kills me */
+  // XXX: INFINITE LOOP: Wait until parent kills me
+  while(1);  
 }
 
-
-
-/*
- * Read from "pty" and send it to stdout 
- */
+// Read from "pty" and send it to stdout 
 void reader() {
   char    c[BUFSIZ];
   int     i;
 
-
 #ifdef DEBUG
     printf("reader(): pid = %d\n",getpid());
 #endif
-  /*
-   * Continuously read from "pty" until exhausted.  Write every character
-   * to stdout if -x flag is not present, and to "fileo" if -o flag is on.   
-   */
-  signal( SIGALRM, reader_done );
-  signal( SIGUSR1, writer_done );
+
+  // Continuously read from "pty" until exhausted.  Write every character
+  // to stdout if -x flag is not present, and to "fileo" if -o flag is on.   
+  signal(SIGALRM, reader_done);
+  signal(SIGUSR1, writer_done);
 
   while ((i = read(pty, c, sizeof(c))) > 0) {
-    if( !flagx ) {
-      if( write(1, c, i) != i ) {
-        exit( 1 );
+    if(!flagx) {
+      if(write(1, c, i) != i) {
+        exit(1);
       }
     }
 
-    if( flago ) {
-      if(  write( fileno(fileo), c, i ) != i  ) {
-        perror( nameo );
-        exit( 1 );
+    if(flago) {
+      if(write(fileno(fileo), c, i) != i) {
+        perror(nameo);
+        exit(1);
       }
     }
 
-    /*
-     * The following "if" essentially means when "writer" is done, and
-     * there is no more keystroke coming from "pty" wait for "flagt"
-     * seconds and quit.  If during this wait, a character comes from
-     * "pty", then the wait is set back. 
-     */
-    if( !writing ) {
-      ualarm( flagt, 0 );
+    // The following "if" essentially means when "writer" is done, and
+    // there is no more keystroke coming from "pty" wait for "flagt"
+    // seconds and quit.  If during this wait, a character comes from
+    // "pty", then the wait is set back. 
+    if(!writing) {
+      ualarm(flagt, 0);
     }
   }
 
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: reader finished\n" );
+  fprintf(stderr, "ptyjig: reader finished\n");
 #endif
 
-  reader_done( 0 );
+  reader_done(0);
 }
-
-
-
 
 void doreader() {
   reader();
 }
 
-
-
-/*
- * Fork writer 
- */
+// Fork writer 
 void dowriter() {
-  if(  (writerPID = fork()) == -1  ) {
+  if((writerPID = fork()) == -1) {
     perror("dowriter(): fork:");
     exit(1);
   } 
 
-  if( writerPID == CHILD ) {
+  if(writerPID == CHILD) {
     writerPID = getpid();
     writer();
   }
 #ifdef DEBUG
     printf("dowriter(): pid = %d\n",writerPID);
 #endif
-     
 }
 
-
-/*
- * Display help screen 
- */
+// Display help screen 
 void usage() {
   printf("  ptyjig -- Super pipe for piping output to Unix utilities.\n\n");
   printf("  Usage:\n");
@@ -699,19 +622,16 @@ void usage() {
   printf("     pty -i in -o out csh\n\n");
   printf("       Behaves like \"script out\" except the keystrokes typed by\n");
   printf("       a user are also saved into \"in\".\n");
-  printf("  Authors: \n" );
-  printf("     Lars Fredriksen, Bryan So, Barton Miller\n\n" );
-  printf("  Updated by: \n" );
-  printf("     Gregory Smethells, Brian Bowers, Karlen Lie\n" );
+  printf("  Authors: \n");
+  printf("     Lars Fredriksen, Bryan So, Barton Miller\n\n");
+  printf("  Updated by: \n");
+  printf("     Gregory Smethells, Brian Bowers, Karlen Lie\n");
 
-  exit( 1 );
+  exit(1);
 }
 
-
-/*
- * Parse the args, start reader and writer, fork the process to be "piped" to 
- */
-int main( int argc, char** argv ) {
+// Parse the args, start reader and writer, fork the process to be "piped" to 
+int main(int argc, char** argv) {
   int     num;
   int     cont;
   float   f;
@@ -726,14 +646,14 @@ int main( int argc, char** argv ) {
 #endif
 
 
-  /* Parse the arguments to ptyjig. A ":" after a letter means */
-  /* that flag takes an argument value and isn't just a boolean */
-  while(  (argc > 1) && (argv[1][0] == '-')  ) {
+  // Parse the arguments to ptyjig. A ":" after a letter means
+  // that flag takes an argument value and isn't just a boolean
+  while((argc > 1) && (argv[1][0] == '-')) {
     num  = 1;
     cont = TRUE;
 
-    while( cont ) {
-      switch( argv[1][num] ) {
+    while(cont) {
+      switch(argv[1][num]) {
         case 'e':
           flage = FALSE;
           break;
@@ -763,7 +683,7 @@ int main( int argc, char** argv ) {
           break;
 
         case 'd':
-          if(  sscanf( argv[2], "%f", &f ) < 1  ) {
+          if(sscanf(argv[2], "%f", &f) < 1) {
             usage();
           }
   
@@ -771,12 +691,12 @@ int main( int argc, char** argv ) {
           argv++;
           cont = FALSE;
   
-          /* Convert to microseconds */
+          // Convert to microseconds 
           flagd = (unsigned)(f * 1000000.0);
           break;
 
         case 't':
-          if(  sscanf( argv[2], "%f", &f ) < 1  ) {
+          if(sscanf(argv[2], "%f", &f) < 1) {
             usage();
           }
 
@@ -784,12 +704,12 @@ int main( int argc, char** argv ) {
           argv++;
           cont = FALSE;
 
-          /* Convert to microseconds */
+          // Convert to microseconds 
           flagt = (unsigned)(f * 1000000.0);
           break;
 
         case 'w':
-          if(  sscanf( argv[2], "%f", &f ) < 1  ) {
+          if(sscanf(argv[2], "%f", &f) < 1) {
             usage();
           }
  
@@ -797,7 +717,7 @@ int main( int argc, char** argv ) {
           argv++;
           cont = FALSE;
 
-          /* Convert to microseconds */
+          // Convert to microseconds 
           flagw = (unsigned)(f * 1000000.0);
           break;
 
@@ -807,7 +727,7 @@ int main( int argc, char** argv ) {
  
       num++;
     
-      if( cont && !argv[1][num] ) {
+      if(cont && !argv[1][num]) {
         cont = FALSE;
       }
     }
@@ -817,64 +737,64 @@ int main( int argc, char** argv ) {
   }
 
 
-  /* Now, argv better point to a command */
-  if( !argv[1] ) {
+  // Now, argv better point to a command 
+  if(!argv[1]) {
     usage();
   }
 
-  /* Possibly open a "save the input file"  */
-  if( flagi ) {
-    filei = fopen( namei, "wb" );
+  // Possibly open a "save the input file" 
+  if(flagi) {
+    filei = fopen(namei, "wb");
 
-    if( filei == NULL ) {
+    if(filei == NULL) {
       perror(namei);
       exit(1);
     }
   }
 
-  /* Possible open a "save the output file" */
-  if( flago ) {
-    fileo = fopen( nameo, "wb" );
+  // Possible open a "save the output file"
+  if(flago) {
+    fileo = fopen(nameo, "wb");
 
-    if( fileo == NULL ) {
+    if(fileo == NULL) {
       perror(nameo);
       exit(1);
     }
   }
 
 
-  /* open an arbitrary pseudo-terminal pair  */
+  // open an arbitrary pseudo-terminal pair 
   setup_pty();
 
 #ifdef LINUX
-  /* Get Attributes for Master */
-  tcgetattr( pty, &termIOSettings );
+  // Get Attributes for Master
+  tcgetattr(pty, &termIOSettings);
 
-  /* Make output as RAW as possible */
-  cfmakeraw( &termIOSettings );
+  // Make output as RAW as possible
+  cfmakeraw(&termIOSettings);
 
   termIOSettings.c_lflag |= ECHO;
 
-  /* Set Attributes for Master to RAWed version of "termIOSettings" */
-  (void) tcsetattr( pty, TCSANOW, &termIOSettings );
+  // Set Attributes for Master to RAWed version of "termIOSettings"
+  (void) tcsetattr(pty, TCSANOW, &termIOSettings);
 #endif
 
-  /* fork and execute test program with arguments */
+  // fork and execute test program with arguments 
   progname = argv[1]; 
-  execute( (char **) &argv[1] );
+  execute((char **) &argv[1]);
 
 
 
-  signal( SIGWINCH, sigwinch ); 
+  signal(SIGWINCH, sigwinch); 
 
   readerPID = getpid(); 
 
   dowriter();
 
-  /* put here instead of above to avoid invoking clean_XYZ twice */
-  signal( SIGQUIT, clean_quit ); 
-  signal( SIGTERM, clean_term ); 
-  signal( SIGINT,  clean_int  ); 
+  // put here instead of above to avoid invoking clean_XYZ twice 
+  signal(SIGQUIT, clean_quit); 
+  signal(SIGTERM, clean_term); 
+  signal(SIGINT,  clean_int); 
 
   doreader();
 
@@ -883,16 +803,16 @@ int main( int argc, char** argv ) {
   int pid, status;
 
 #ifdef DEBUG
-  fprintf( stderr, "ptyjig: got signal SIGCHLD\n" );
+  fprintf(stderr, "ptyjig: got signal SIGCHLD\n");
 #endif
 
-  /* Guarantee to return since a child is dead */
-  pid = wait3( (int*)&status, WUNTRACED, 0 );  
+  // Guarantee to return since a child is dead 
+  pid = wait3((int*)&status, WUNTRACED, 0);  
 #ifdef DEBUG
     printf("sigchld wait3: pid = %d\n",pid);
 #endif
 
-  if( pid ) {
+  if(pid) {
 #ifdef DEBUG
     printf("ptyjig: pid = %d\n",pid);
     printf("ptyjig: status = %d %d %d %d %d\n",
@@ -901,50 +821,51 @@ int main( int argc, char** argv ) {
 
 #endif
     int core = 0;
-    if( WSTOPSIG(status) == SIGTSTP ) {
-      kill( pid, SIGCONT );
+    if(WSTOPSIG(status) == SIGTSTP) {
+      kill(pid, SIGCONT);
     }
     else {
-      signal( SIGINT,   SIG_DFL );
-      signal( SIGQUIT,  SIG_DFL ); 
-      signal( SIGTERM,  SIG_DFL ); 
-      signal( SIGWINCH, SIG_DFL ); 
-      signal( SIGCHLD,  SIG_IGN );
+      signal(SIGINT,   SIG_DFL);
+      signal(SIGQUIT,  SIG_DFL); 
+      signal(SIGTERM,  SIG_DFL); 
+      signal(SIGWINCH, SIG_DFL); 
+      signal(SIGCHLD,  SIG_IGN);
 
       done();
 
-      if( pid != execPID ) {
+      if(pid != execPID) {
 #ifdef DEBUG
-        fprintf( stderr, "ptyjig: somebody killed my child\n" );
-        fprintf( stderr, "ptyjig: killing execPID = %d\n", execPID );
+        fprintf(stderr, "ptyjig: somebody killed my child\n");
+        fprintf(stderr, "ptyjig: killing execPID = %d\n", execPID);
 #endif
-
-        kill( execPID, SIGKILL);          /* kill the exec too */
-        kill( readerPID, WTERMSIG(status)); /* use the same method to suicide */
+        // kill the exec too 
+        kill(execPID, SIGKILL);          
+        // use the same method to suicide 
+        kill(readerPID, WTERMSIG(status)); 
       }
 
+      // Just to make sure it is killed 
+      kill(execPID, SIGKILL); 
 
-      kill( execPID, SIGKILL ); /* Just to make sure it is killed */
-
-      if( pid != writerPID && writerPID != -1 ) {
+      if(pid != writerPID && writerPID != -1) {
 #ifdef DEBUG
-        printf( "ptyjig: killing writerPID = %d\n", writerPID );
+        printf("ptyjig: killing writerPID = %d\n", writerPID);
 #endif
-        kill( writerPID, SIGKILL );
+        kill(writerPID, SIGKILL);
       }
 
-      if( WTERMSIG(status) ) {
-        fprintf( stderr,"ptyjig: %s: %s%s\n",progname,
+      if(WTERMSIG(status)) {
+        fprintf(stderr,"ptyjig: %s: %s%s\n",progname,
                  mesg[WTERMSIG(status)].pname,
-                 WCOREDUMP(status) ? " (core dumped)" : "" );
+                 WCOREDUMP(status) ? " (core dumped)" : "");
       	if(WTERMSIG(status) == 11){
       	  core = 139;
       	}
       }
 
-      /* If process terminates normally, return its retcode */
-      /* If abnormally, return termsig.  This is not exactly */
-      /* the same as csh, since the csh method is not too obvious */
+      // If process terminates normally, return its retcode 
+      // If abnormally, return termsig.  This is not exactly 
+      // the same as csh, since the csh method is not too obvious 
       return core;
     }
     return core;
