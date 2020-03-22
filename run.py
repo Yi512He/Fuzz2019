@@ -1,3 +1,11 @@
+#  Copyright (c) 2020 Emma He, Mengxiao Zhang, Barton Miller
+#
+#  This program is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+# this script is used to generate big test cases.
+
 import os
 import subprocess
 import sys
@@ -6,7 +14,7 @@ import random
 ############
 # options
 # where are the test cases
-test_dir = "/NewTest_small"
+test_dir = "./data/NewTest_big"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -19,10 +27,10 @@ timeout = 300
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_FreeBSD/run.pty"
+all_utilities_file = "./test_MacOS/run.flex"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./results/small_pty"
+output_dir = "./results/flex_big"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
