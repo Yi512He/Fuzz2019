@@ -1,4 +1,4 @@
-/* Copyright (c) 2020 Lars Fredriksen, Bryan So, Barton Miller
+/* Copyright (c) 1989 Lars Fredriksen, Bryan So, Barton Miller
  * All rights reserved
  *  
  * This software is furnished under the condition that it may not
@@ -7,6 +7,7 @@
  * hereby transferred.
  *
  * Any use of this software must include the above copyright notice.
+ *
  */
 
 /*-
@@ -59,13 +60,15 @@
 
 static char *progname = "fuzz";
 
+#define DEBUG_off
+
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
 #include <time.h>
 #include <ctype.h>
-#include <unistd.h>
 
 #define SWITCH '-'
 
@@ -205,10 +208,9 @@ void init()
       * Init random numbers 
       */
      if (!flags){
-      // seed = (int)time(&now) % 37;
+          // use current time for random seed
 	  seed = (int)time(&now);
-	  // printf("seed is %ld", seed);
-	}
+     }
 
      srand(seed);
 
