@@ -4,7 +4,7 @@
 #  WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-# this script is used to generate normal test cases.
+# this script is used to generate medium test cases.
 
 import os, sys, re
 import subprocess
@@ -12,7 +12,7 @@ import random
 import time
 
 fnull = open(os.devnull, 'w')
-path = "./NewTest_normal2"
+path = "./NewTest_medium2"
 
 if not os.path.exists(path):
   os.mkdir(path)
