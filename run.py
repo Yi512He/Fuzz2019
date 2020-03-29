@@ -10,11 +10,12 @@ import os
 import subprocess
 import sys
 import random
+import getopt
 
 ############
 # options
 # where are the test cases
-test_dir = "./data/NewTest_big"
+test_dir = "../NewTest_big"
 
 # the script will test all the files starting with a specified test_prefix
 test_prefix = "t"
@@ -27,10 +28,10 @@ timeout = 300
 hang_num = 3
 
 # the script will test each cmd in run.master on the test cases in test_dir
-all_utilities_file = "./test_MacOS/run.flex"
+all_utilities_file = "./test_Linux/run.master_options"
 
 # the result will be saved in output_dir, each cmd corresponds to a result file 
-output_dir = "./results/flex_big"
+output_dir = "./results/linux_big"
 
 # the script will combine result files into single file named combine_filename
 combine_filename = "all"
@@ -309,6 +310,26 @@ def run_pty(item, output, test_list, fnull, timeout):
 
 # the script start here
 # create dir for log
+
+test_dir = ''
+output_dir = ''
+
+try:
+  opts, args = getopt.getopt(sys.argv[1:],"hi:o:",["ifile=","ofile="])
+except getopt.GetoptError:
+  print ("python run.py -i <inputfile> -o <outputfile>")
+  sys.exit(2)
+for opt, arg in opts:
+  if opt == '-h':
+    print ("python test.py -i <inputfile> -o <outputfile>")
+    sys.exit()
+  elif opt in ("-i", "--ifile"):
+    test_dir = arg
+  elif opt in ("-o", "--ofile"):
+    output_dir = arg
+print ("Input file is ", test_dir)
+print ("Output file is ", output_dir)
+
 if not os.path.exists(output_dir):
   os.mkdir(output_dir)
 
